@@ -34,7 +34,13 @@ fun SecretNumber(){
                 val number = inputUser.toIntOrNull()
                 if (number == null){
                     message = "Write a number"
-                } else validate(number)
+                } else {
+                    when (validate(number)){
+                        0 -> message = "You have guessed the number!"
+                        1 -> message = "THe number is bigger than the secret number!"
+                        2 -> message = "The number is smaller than the secret number!"
+                    }
+                }
 
             }
         ){
@@ -45,7 +51,6 @@ fun SecretNumber(){
 
 fun validate(number: Int): Int {
     val secretNumber = 89
-
     if (number == secretNumber) return 0
     else if (number > secretNumber) return 1
     else return 2
