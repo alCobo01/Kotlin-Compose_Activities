@@ -13,6 +13,8 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -27,18 +29,38 @@ object GameDestination{
     data object FinalScreen
 }
 
+class TicViewModel : ViewModel(){
+    var jugador by mutableStateOf(false)
+    var matriuValors by mutableStateOf(Array(3) { IntArray(3) {0} })
+    var buttonText by mutableStateOf(Array(3) { Array(3) {""} })
+
+    fun jugada(fila: Int, columna: Int){
+        if (matriuValors[fila][columna] == 0) {
+            matriuValors[fila][columna] = if (jugador) 1 else 2
+            buttonText[fila][columna] = if (jugador) "X" else "O"
+            jugador = !jugador
+        }
+    }
+}
+
+
 @Composable
 fun TicTacToe(){
     val navController = rememberNavController()
+
     NavHost(navController = navController, startDestination = GameDestination.FirstScreen){
         composable<GameDestination.FirstScreen> {
             FirstScreen(
-                navigateToGameScreen = { navController.navigate(GameDestination.GameScreen) }
+                navigateToGameScreen = {
+                    navController.navigate(GameDestination.GameScreen) }
             )
         }
         composable<GameDestination.GameScreen> {
+            val viewModel: TicViewModel = viewModel()
             GameScreen(
-                navigateToFinalScreen = { navController.navigate(GameDestination.FinalScreen) }
+                navigateToFinalScreen = {
+                    navController.navigate(GameDestination.FinalScreen) },
+                viewModel = viewModel
             )
         }
     }
@@ -57,22 +79,49 @@ fun FirstScreen(navigateToGameScreen: () -> Unit){
 }
 
 @Composable
-fun GameScreen(navigateToFinalScreen: () -> Unit){
-    var jugador by remember { mutableStateOf(false) }
-    var matriu by remember { mutableStateOf(Array(3) { IntArray(3) }) }
-
-    fun assignarValor(fila: Int, columna: Int){
-        if (matriu[fila][columna] == 0) {
-            matriu[fila][columna] = if (jugador) 1 else 2
-            jugador = !jugador
-        }
-    }
+fun GameScreen(viewModel: TicViewModel, navigateToFinalScreen: () -> Unit){
+    val buttonText by viewModel.buttonText
 
     Column {
-        Row {
-            Button(onClick = { assignarValor(0, 0) }){
-                Text("")
+        for (fila in 0..2){
+            Row {
+                for (columna in 0..2){
+                    Button(
+                        onClick = { viewModel.jugada(fila, columna) }
+                    ){
+                        Text(viewModel.buttonText[fila][columna])
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+                }
             }
+        }
         }
     }
 
