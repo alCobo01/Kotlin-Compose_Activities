@@ -33,6 +33,7 @@ class TicViewModel : ViewModel(){
     var jugador by mutableStateOf(false)
     var matriuValors by mutableStateOf(Array(3) { IntArray(3) {0} })
     var buttonText by mutableStateOf(Array(3) { Array(3) {""} })
+    var winnerMessage by mutableStateOf("")
 
     fun jugada(fila: Int, columna: Int){
         if (matriuValors[fila][columna] == 0) {
@@ -40,6 +41,49 @@ class TicViewModel : ViewModel(){
             buttonText[fila][columna] = if (jugador) "X" else "O"
             jugador = !jugador
         }
+    }
+
+    fun checkWinner(): Int {
+        for (i in 0..2) {
+            if (matriuValors[i][0] != 0 &&
+                matriuValors[i][0] == matriuValors[i][1] &&
+                matriuValors[i][1] == matriuValors[i][2]
+            ) {
+                winnerMessage = if (matriuValors[i][0] == 1) "X wins!" else "O wins!"
+                return matriuValors[i][0]
+            }
+        }
+
+        for (j in 0..2) {
+            if (matriuValors[0][j] != 0 &&
+                matriuValors[0][j] == matriuValors[1][j] &&
+                matriuValors[1][j] == matriuValors[2][j]
+            ) {
+                winnerMessage = if (matriuValors[0][j] == 1) "X wins!" else "O wins!"
+                return matriuValors[0][j]
+            }
+        }
+
+        if (matriuValors[0][0] != 0 &&
+            matriuValors[0][0] == matriuValors[1][1] &&
+            matriuValors[1][1] == matriuValors[2][2]
+        ) {
+            winnerMessage = if (matriuValors[0][0] == 1) "X wins!" else "O wins!"
+            return matriuValors[0][0]
+        }
+        if (matriuValors[0][2] != 0 &&
+            matriuValors[0][2] == matriuValors[1][1] &&
+            matriuValors[1][1] == matriuValors[2][0]
+        ) {
+            winnerMessage = if (matriuValors[0][2] == 1) "X wins!" else "O wins!"
+            return matriuValors[0][2]
+        }
+
+        if (matriuValors.all { row -> row.all { it != 0 } }) {
+            winnerMessage = "Draw"
+            return -1
+        }
+        return 0 // El juego continúa
     }
 }
 
@@ -56,7 +100,7 @@ fun TicTacToe(){
             )
         }
         composable<GameDestination.GameScreen> {
-            val viewModel: TicViewModel = viewModel()
+            val viewModel: TicViewModel = viewModel{ TicViewModel() }
             GameScreen(
                 navigateToFinalScreen = {
                     navController.navigate(GameDestination.FinalScreen) },
@@ -74,13 +118,14 @@ fun FirstScreen(navigateToGameScreen: () -> Unit){
         horizontalAlignment = Alignment.CenterHorizontally
     ){
         Text("Benvinguts al Tic Tac Toe!")
-        Button(onClick = navigateToGameScreen){ Text("Juguem!") }
+        Button(onClick = navigateToGameScreen){ Text("Juguem!")
+            println("hola")}
     }
 }
 
 @Composable
 fun GameScreen(viewModel: TicViewModel, navigateToFinalScreen: () -> Unit){
-    val buttonText by viewModel.buttonText
+    val buttonText by remember { mutableStateOf(viewModel.buttonText) }
 
     Column {
         for (fila in 0..2){
@@ -89,36 +134,7 @@ fun GameScreen(viewModel: TicViewModel, navigateToFinalScreen: () -> Unit){
                     Button(
                         onClick = { viewModel.jugada(fila, columna) }
                     ){
-                        Text(viewModel.buttonText[fila][columna])
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+                        Text(buttonText[fila][columna])
                 }
             }
         }
