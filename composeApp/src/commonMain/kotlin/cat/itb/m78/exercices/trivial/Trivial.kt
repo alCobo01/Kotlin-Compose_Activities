@@ -18,22 +18,27 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import cat.itb.m78.exercices.navigation.TicViewModel
+import cat.itb.m78.exercices.trivial.screens.GameScreen
+import cat.itb.m78.exercices.trivial.screens.GameViewModel
+import cat.itb.m78.exercices.trivial.screens.MenuScreen
+import cat.itb.m78.exercices.trivial.screens.ResultScreen
+import cat.itb.m78.exercices.trivial.screens.SettingsScreen
 import kotlinx.serialization.Serializable
 import m78exercices.composeapp.generated.resources.Res
 import m78exercices.composeapp.generated.resources.VeniteAdoremus
 import m78exercices.composeapp.generated.resources.trivialLogo
 import org.jetbrains.compose.resources.Font
 import org.jetbrains.compose.resources.painterResource
-
-
-
 
 object Destination{
     @Serializable
@@ -45,6 +50,8 @@ object Destination{
     @Serializable
     data object ResultScreen
 }
+
+val brush = Brush.linearGradient(listOf(Color(0xFFFAE864), Color(0xFFFAD664), Color(0xFFFAAD64) ))
 
 @Composable
 fun Trivial(){
@@ -64,8 +71,11 @@ fun Trivial(){
         }
 
         composable<Destination.GameScreen> {
+            val viewModel: GameViewModel = viewModel { GameViewModel() }
+
             GameScreen (
-                navigateToResultScreen = { navController.navigate(Destination.ResultScreen) }
+                navigateToResultScreen = { navController.navigate(Destination.ResultScreen) },
+                viewModel = viewModel
             )
         }
 
@@ -77,50 +87,8 @@ fun Trivial(){
     }
 }
 
-@Composable
-fun MenuScreen(navigateToGameScreen: () -> Unit, navigateToSettingsScreen: () -> Unit){
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center,
-        modifier = Modifier.fillMaxSize().background(Color(0xFFF1C40F))
-    ) {
-        Text(
-            text = "Trivial",
-            fontSize = 60.sp,
-            fontFamily = FontFamily(Font(Res.font.VeniteAdoremus))
-        )
-        Image(
-            painter = painterResource(Res.drawable.trivialLogo),
-            contentDescription = null,
-            modifier = Modifier.size(200.dp).clip(CircleShape)
-        )
-        Spacer(modifier = Modifier.padding(10.dp))
-        Button(
-            onClick = navigateToGameScreen,
-            modifier = Modifier.height(300.dp).width(300.dp),
-            colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF3498DB)))
-        { Text("Game") }
 
-        Spacer(modifier = Modifier.padding(3.dp))
 
-        Button(
-            onClick = navigateToSettingsScreen,
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF3498DB))) { Text("Settings") }
-    }
-}
 
-@Composable
-fun SettingsScreen(navigateToMenuScreen: () -> Unit){
 
-}
 
-@Composable
-fun GameScreen(navigateToResultScreen: () -> Unit){
-
-}
-
-@Composable
-fun ResultScreen(navigateToMenuScreen: () -> Unit){
-
-}
