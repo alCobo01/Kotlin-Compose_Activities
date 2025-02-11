@@ -8,13 +8,19 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cat.itb.m78.exercices.trivial.brush
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 data class Question(
     val text: String,
@@ -22,14 +28,14 @@ data class Question(
     val correctAnswerIndex: Int
 )
 
-data class TrivialUiState(
-    val currentQuestionIndex: Int = 0,
-    val score: Int = 0,
-    val showResult: Boolean = false
-)
+class GameViewModel(val totalRounds: Int) : ViewModel(){
+    var roundText by mutableStateOf("")
+    var score by mutableStateOf(0)
+    var mostrarResultat by mutableStateOf(false)
+    var currentQuestion by mutableStateOf<Question?>(null)
+    var gameFinished by mutableStateOf(false)
+    var currentRound by mutableStateOf(1)
 
-class GameViewModel : ViewModel(){
-    private val isOver = false
     private val questions = listOf(
         Question(
             text = "Quina és la capital del Japó?",
@@ -187,39 +193,74 @@ class GameViewModel : ViewModel(){
         return questions.random()
     }
 
-    fun checkQuestion(userAnswer: Int, indexAnswerQuestion: MutableState<Int>){
-        var isCorrect = false
-        if (userAnswer == indexAnswerQuestion.value) { isCorrect = true }
+    fun checkQuestion(userAnswer: Int, navigateToResultScreen: () -> Unit){
+        if (!gameFinished) {
+            if (userAnswer == currentQuestion?.correctAnswerIndex) {
+                roundText = "Resposta correcta!"
+                score++
+            } else {
+                roundText = "Resposta incorrecta..."
+            }
+            mostrarResultat = true
+            viewModelScope.launch {
+                delay(5000)
+                mostrarResultat = false
+                if (score >= totalRounds) {
+                    gameFinished = true
+                    navigateToResultScreen()
+                } else {
+                    currentQuestion = randomQuestion()
+                    currentRound++
+                }
+            }
+        }
     }
-
 }
 
 @Composable
-fun GameScreen(viewModel: GameViewModel, navigateToResultScreen: () -> Unit){
-    val currentQuestion = remember { mutableStateOf(viewModel.randomQuestion()) }
-    val correctAnswerIndex = remember { mutableStateOf(currentQuestion.value.correctAnswerIndex) }
+fun GameScreen(totalRounds: Int, navigateToResultScreen: () -> Unit){
+    val viewModel: GameViewModel = viewModel { GameViewModel(totalRounds) }
+    var currentQuestion by remember { mutableStateOf<Question?>(null) }
+
+    LaunchedEffect(Unit){
+        currentQuestion = viewModel.randomQuestion()
+    }
+
+    GameScreenView(viewModel, currentQuestion, navigateToResultScreen)
+}
+
+@Composable
+fun GameScreenView(viewModel: GameViewModel, currentQuestion : Question?, navigateToResultScreen: () -> Unit){
+    LaunchedEffect(Unit) {
+        if (viewModel.gameFinished) {
+            navigateToResultScreen()
+        }
+    }
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxSize().background(brush)
     ) {
-        Text(currentQuestion.value.text)
-        Row {
-            Button(onClick = { viewModel.randomQuestion() } ){
-                val answer = remember { mutableStateOf(currentQuestion.value.options[0]) }
-                Text(answer.value)}
-            Button(onClick = { viewModel.checkQuestion(1, correctAnswerIndex) } ){
-                val answer = remember { mutableStateOf(currentQuestion.value.options[1]) }
-                Text(answer.value)}
-        }
-        Row {
-            Button(onClick = { viewModel.checkQuestion(2, correctAnswerIndex) } ){
-                val answer = remember { mutableStateOf(currentQuestion.value.options[2]) }
-                Text(answer.value)}
-            Button(onClick = { viewModel.checkQuestion(3, correctAnswerIndex) } ){
-                val answer = remember { mutableStateOf(currentQuestion.value.options[3]) }
-                Text(answer.value)}
+        if (viewModel.mostrarResultat) Text(viewModel.roundText)
+
+        if (currentQuestion != null) {
+            Text(currentQuestion.text)
+            Row {
+                Button(onClick = { viewModel.checkQuestion(0, navigateToResultScreen) } ){
+                    Text(currentQuestion.options[0])}
+                Button(onClick = { viewModel.checkQuestion(1, navigateToResultScreen) } ){
+                    Text(currentQuestion.options[1])}
+            }
+            Row {
+                Button(onClick = { viewModel.checkQuestion(2, navigateToResultScreen) } ){
+                    Text(currentQuestion.options[2])}
+                Button(onClick = { viewModel.checkQuestion(3, navigateToResultScreen) } ){
+                    Text(currentQuestion.options[3])}
+            }
+
+            Text("Ronda ${viewModel.currentRound} de ${viewModel.totalRounds}")
+            Text("Punts: ${viewModel.score}")
         }
 
     }

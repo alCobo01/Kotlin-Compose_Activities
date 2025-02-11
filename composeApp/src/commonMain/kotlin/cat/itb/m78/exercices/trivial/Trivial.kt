@@ -71,11 +71,10 @@ fun Trivial(){
         }
 
         composable<Destination.GameScreen> {
-            val viewModel: GameViewModel = viewModel { GameViewModel() }
 
             GameScreen (
-                navigateToResultScreen = { navController.navigate(Destination.ResultScreen) },
-                viewModel = viewModel
+                totalRounds = 10,
+                navigateToResultScreen = { navController.navigate(Destination.ResultScreen) }
             )
         }
 
