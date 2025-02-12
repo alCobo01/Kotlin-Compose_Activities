@@ -11,12 +11,11 @@ import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -30,6 +29,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import cat.itb.m78.exercices.trivial.SettingsViewModel
 import cat.itb.m78.exercices.trivial.TrivialDifficulty
 import cat.itb.m78.exercices.trivial.brush
+import kotlin.math.roundToInt
 
 @Composable
 fun SettingsScreen(navigateToMenuScreen: () -> Unit) {
@@ -40,8 +40,8 @@ fun SettingsScreen(navigateToMenuScreen: () -> Unit) {
 @Composable
 fun SettingsScreenView(navigateToMenuScreen: () -> Unit, viewModel: SettingsViewModel){
     var expandedDifficulty by remember { mutableStateOf(false) }
-    var difficultyOptions = TrivialDifficulty.entries
-    var roundsOptions = listOf(5, 10, 15)
+    val difficultyOptions = TrivialDifficulty.entries
+    val roundsOptions = listOf(5, 10, 15)
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -58,8 +58,7 @@ fun SettingsScreenView(navigateToMenuScreen: () -> Unit, viewModel: SettingsView
                     IconButton(onClick = { expandedDifficulty = !expandedDifficulty }) {
                         Icon(Icons.Filled.ArrowDropDown, "dropdown arrow")
                     }
-                },
-                modifier = Modifier.fillMaxWidth() // Fill width for TextField
+                }
             )
             DropdownMenu(
                 expanded = expandedDifficulty,
@@ -77,11 +76,10 @@ fun SettingsScreenView(navigateToMenuScreen: () -> Unit, viewModel: SettingsView
             }
         }
 
-        // Rounds Radio Buttons
         Text("Rounds", style = MaterialTheme.typography.bodyLarge)
-        Row(
-            horizontalArrangement = Arrangement.SpaceEvenly,
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceEvenly,
             modifier = Modifier.fillMaxWidth()
         ) {
             roundsOptions.forEach { rounds ->
@@ -99,10 +97,16 @@ fun SettingsScreenView(navigateToMenuScreen: () -> Unit, viewModel: SettingsView
             }
         }
 
-        // Time per round Slider (Example - you might need to adjust the range and display)
-        // ... (Slider - similar changes to use viewModel for state and updates) ...
+        Text("Time per round", style = MaterialTheme.typography.bodyLarge)
 
-        // Return to menu Button
+        Slider(
+            value = viewModel.selectedTime,
+            onValueChange = { viewModel.updateTime(it.roundToInt().toFloat()) },
+            steps = 5,
+            valueRange = 4f..10f
+        )
+        Text(text = viewModel.selectedTime.toString())
+
         Button(onClick = navigateToMenuScreen) {
             Text("Return to menu")
         }

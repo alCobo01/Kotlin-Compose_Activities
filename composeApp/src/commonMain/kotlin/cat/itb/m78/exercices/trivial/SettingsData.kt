@@ -6,10 +6,12 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 
 enum class TrivialDifficulty{ Easy, Normal, Hard }
+enum class TrivialTheme{ }
 
 data class TrivialSettings(
     val difficulty: TrivialDifficulty = TrivialDifficulty.Normal,
-    val questionsPerGame: Int = 1
+    val questionsPerGame: Int = 10,
+    val timePerGame: Float = 5f
 )
 
 data object TrivialSettingsManager{
@@ -23,8 +25,9 @@ data object TrivialSettingsManager{
 class SettingsViewModel: ViewModel(){
     var selectedDifficulty by mutableStateOf(TrivialSettingsManager.get().difficulty)
     var selectedRounds by mutableStateOf(TrivialSettingsManager.get().questionsPerGame)
+    var selectedTime by mutableStateOf(TrivialSettingsManager.get().timePerGame)
 
-    fun updateDifficulty(difficulty: TrivialDifficulty){
+    fun updateDifficulty(difficulty: TrivialDifficulty) {
         selectedDifficulty = difficulty
         saveSettings()
     }
@@ -34,11 +37,17 @@ class SettingsViewModel: ViewModel(){
         saveSettings()
     }
 
+    fun updateTime(time: Float){
+        selectedTime = time
+        saveSettings()
+    }
+
     private fun saveSettings() {
         TrivialSettingsManager.update(
             TrivialSettings(
                 difficulty = selectedDifficulty,
                 questionsPerGame = selectedRounds,
+                timePerGame = selectedTime
             )
         )
     }
