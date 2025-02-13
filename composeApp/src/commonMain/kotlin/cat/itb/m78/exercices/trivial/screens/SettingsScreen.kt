@@ -28,6 +28,7 @@ import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cat.itb.m78.exercices.trivial.SettingsViewModel
 import cat.itb.m78.exercices.trivial.TrivialDifficulty
+import cat.itb.m78.exercices.trivial.TrivialTheme
 import cat.itb.m78.exercices.trivial.brush
 import kotlin.math.roundToInt
 
@@ -40,6 +41,9 @@ fun SettingsScreen(navigateToMenuScreen: () -> Unit) {
 @Composable
 fun SettingsScreenView(navigateToMenuScreen: () -> Unit, viewModel: SettingsViewModel){
     var expandedDifficulty by remember { mutableStateOf(false) }
+    var expandedTheme by remember { mutableStateOf(false) }
+
+    val themeOptions = TrivialTheme.entries
     val difficultyOptions = TrivialDifficulty.entries
     val roundsOptions = listOf(5, 10, 15)
 
@@ -48,6 +52,33 @@ fun SettingsScreenView(navigateToMenuScreen: () -> Unit, viewModel: SettingsView
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxSize().background(brush)
     ) {
+        Column {
+            TextField(
+                readOnly = true,
+                value = viewModel.selectedTheme.name,
+                onValueChange = {},
+                label = { Text("Theme") },
+                trailingIcon = {
+                    IconButton(onClick = { expandedTheme = !expandedTheme }) {
+                        Icon(Icons.Filled.ArrowDropDown, "dropdown arrow")
+                    }
+                }
+            )
+            DropdownMenu(
+                expanded = expandedTheme,
+                onDismissRequest = { expandedTheme = false }
+            ) {
+                themeOptions.forEach { theme ->
+                    DropdownMenuItem(
+                        text = { Text(text = theme.name) },
+                        onClick = {
+                            viewModel.updateTheme(theme)
+                            expandedTheme = false
+                        }
+                    )
+                }
+            }
+        }
         Column {
             TextField(
                 readOnly = true,
