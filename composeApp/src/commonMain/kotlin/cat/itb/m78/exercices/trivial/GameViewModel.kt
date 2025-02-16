@@ -5,7 +5,6 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -27,6 +26,9 @@ class GameViewModel() : ViewModel(){
     var gameFinished by mutableStateOf(false)
     var currentRound by mutableStateOf(1)
 
+    init {
+        currentQuestion = randomQuestion()
+    }
 
     fun randomQuestion(): Question {
         var theme: String
@@ -42,7 +44,9 @@ class GameViewModel() : ViewModel(){
 
     fun checkQuestion(userAnswer: Int, navigateToResultScreen: () -> Unit){
         if (!gameFinished) {
-            if (userAnswer == currentQuestion?.correctAnswerIndex) {
+            if (userAnswer == -1) {
+                roundText = "Temps esgotat!"
+            } else if (userAnswer == currentQuestion?.correctAnswerIndex) {
                 roundText = "Resposta correcta!"
                 score++
             } else {
@@ -50,7 +54,7 @@ class GameViewModel() : ViewModel(){
             }
             mostrarResultat = true
             viewModelScope.launch {
-                delay(5000)
+                delay(2000) // Reduced delay to 2 seconds for better UX
                 mostrarResultat = false
                 if (currentRound >= totalRounds) {
                     gameFinished = true
@@ -62,6 +66,7 @@ class GameViewModel() : ViewModel(){
             }
         }
     }
+
 
     suspend fun loadProgress(updateProgress: (Float) -> Unit) {
         for (i in 1..50) {
