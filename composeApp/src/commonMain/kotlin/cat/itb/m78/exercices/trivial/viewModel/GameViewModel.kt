@@ -42,7 +42,7 @@ class GameViewModel(private val settingsViewModel: SettingsViewModel) : ViewMode
             question = questions.random()
             theme = question.category
             difficulty = question.difficulty
-        } while (theme != settingsViewModel.selectedTheme.name && difficulty != settingsViewModel.selectedDifficulty.name)
+        } while (theme != settingsViewModel.selectedTheme.toString() || difficulty != settingsViewModel.selectedDifficulty.toString())
 
         return question
     }

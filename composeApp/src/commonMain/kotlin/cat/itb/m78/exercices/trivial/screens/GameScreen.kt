@@ -23,6 +23,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import cat.itb.m78.exercices.trivial.viewModel.GameViewModel
@@ -113,7 +114,8 @@ fun GameScreenView(viewModel: GameViewModel, settingsData: SettingsViewModel, na
             Text(
                 text = viewModel.currentQuestion!!.text,
                 fontSize = 20.sp,
-                fontWeight = FontWeight.Bold
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center
             )
 
             Spacer(modifier = Modifier.padding(10.dp))
