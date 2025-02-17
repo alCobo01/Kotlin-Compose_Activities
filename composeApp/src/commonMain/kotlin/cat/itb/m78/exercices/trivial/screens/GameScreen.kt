@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.Text
@@ -14,35 +13,27 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cat.itb.m78.exercices.trivial.GameViewModel
-import cat.itb.m78.exercices.trivial.Question
-import cat.itb.m78.exercices.trivial.SettingsViewModel
+import cat.itb.m78.exercices.trivial.viewModel.GameViewModel
+import cat.itb.m78.exercices.trivial.viewModel.SettingsViewModel
 import cat.itb.m78.exercices.trivial.brush
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import kotlin.time.Duration.Companion.seconds
 
 @Composable
-fun GameScreen(navigateToResultScreen: () -> Unit){
-    val viewModel: GameViewModel = viewModel { GameViewModel() }
-    val settingsData: SettingsViewModel = viewModel { SettingsViewModel() }
-
+fun GameScreen(navigateToResultScreen: () -> Unit, viewModel: GameViewModel, settingsData: SettingsViewModel){
     GameScreenView(viewModel, settingsData, navigateToResultScreen)
 }
 
 @Composable
 fun GameScreenView(viewModel: GameViewModel, settingsData: SettingsViewModel, navigateToResultScreen: () -> Unit){
-    var currentProgress by remember { mutableStateOf(0f) }
     var timeLeft by remember { mutableStateOf(settingsData.selectedTime) }
     var isTimerRunning by remember { mutableStateOf(true) }
     var questionAnswered by remember { mutableStateOf(false) }
-    val scope = rememberCoroutineScope()
 
     LaunchedEffect(viewModel.currentQuestion) {
         questionAnswered = false
@@ -56,7 +47,7 @@ fun GameScreenView(viewModel: GameViewModel, settingsData: SettingsViewModel, na
             timeLeft--
             if (timeLeft == 0f){
                 isTimerRunning = false
-                viewModel.checkQuestion(-1, navigateToResultScreen)
+                viewModel.checkQuestion(-1) { navigateToResultScreen() }
             }
         }
     }
@@ -81,14 +72,14 @@ fun GameScreenView(viewModel: GameViewModel, settingsData: SettingsViewModel, na
                     if (!questionAnswered) {
                         isTimerRunning = false
                          questionAnswered = true
-                        viewModel.checkQuestion(0, navigateToResultScreen)
+                        viewModel.checkQuestion(0) { navigateToResultScreen() }
                     }
                 } ){Text(viewModel.currentQuestion!!.options[0])}
                 Button(onClick = {
                     if (!questionAnswered) {
                         isTimerRunning = false
                         questionAnswered = true
-                        viewModel.checkQuestion(1, navigateToResultScreen)
+                        viewModel.checkQuestion(1, { navigateToResultScreen() })
                     }
                 } ){Text(viewModel.currentQuestion!!.options[1])}
             }
@@ -97,14 +88,14 @@ fun GameScreenView(viewModel: GameViewModel, settingsData: SettingsViewModel, na
                     if (!questionAnswered) {
                         isTimerRunning = false
                         questionAnswered = true
-                        viewModel.checkQuestion(2, navigateToResultScreen)
+                        viewModel.checkQuestion(2) { navigateToResultScreen() }
                     }
                 } ){Text(viewModel.currentQuestion!!.options[2])}
                 Button(onClick = {
                     if (!questionAnswered) {
                         isTimerRunning = false
                         questionAnswered = true
-                        viewModel.checkQuestion(3, navigateToResultScreen)
+                        viewModel.checkQuestion(3) { navigateToResultScreen() }
                     }
                 } ){Text(viewModel.currentQuestion!!.options[3])}
             }
@@ -116,8 +107,8 @@ fun GameScreenView(viewModel: GameViewModel, settingsData: SettingsViewModel, na
             )
 
             Text("Temps restant: $timeLeft")
-            Text("Ronda ${viewModel.currentRound} de ${viewModel.totalRounds}")
-            Text("Punts: ${viewModel.score}")
+            Text("Ronda ${viewModel.currentRound} de ${settingsData.selectedRounds}")
+            Text("Punts: ${viewModel.scoreViewModel.currentScore}")
         }
 
     }

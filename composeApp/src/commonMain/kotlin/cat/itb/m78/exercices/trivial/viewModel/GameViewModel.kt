@@ -1,62 +1,69 @@
-package cat.itb.m78.exercices.trivial
+package cat.itb.m78.exercices.trivial.viewModel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import cat.itb.m78.exercices.trivial.Question
+import cat.itb.m78.exercices.trivial.questions
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-data class Question(
-    val text: String,
-    val options: List<String>,
-    val correctAnswerIndex: Int,
-    val category: String
-)
-
-class GameViewModel() : ViewModel(){
-    private val settingsData = TrivialSettingsManager.get()
-    val totalRounds: Int = settingsData.questionsPerGame
+class GameViewModel(private val settingsViewModel: SettingsViewModel) : ViewModel(){
+    val scoreViewModel = ScoreViewModel()
 
     var roundText by mutableStateOf("")
-    var score by mutableStateOf(0)
     var mostrarResultat by mutableStateOf(false)
     var currentQuestion by mutableStateOf<Question?>(null)
     var gameFinished by mutableStateOf(false)
     var currentRound by mutableStateOf(1)
 
     init {
-        currentQuestion = randomQuestion()
+        resetGame()
     }
 
-    fun randomQuestion(): Question {
+    fun resetGame() {
+        scoreViewModel.resetScore()
+        currentRound = 1
+        gameFinished = false
+        currentQuestion = randomQuestion()
+        roundText = ""
+    }
+
+    private fun randomQuestion(): Question {
         var theme: String
+        var difficulty: String
         var question: Question
 
         do {
             question = questions.random()
             theme = question.category
-        } while (theme != settingsData.theme.toString())
+            difficulty = question.difficulty
+        } while (theme != settingsViewModel.selectedTheme.toString() || difficulty != settingsViewModel.selectedDifficulty.toString())
 
         return question
     }
 
     fun checkQuestion(userAnswer: Int, navigateToResultScreen: () -> Unit){
         if (!gameFinished) {
-            if (userAnswer == -1) {
-                roundText = "Temps esgotat!"
-            } else if (userAnswer == currentQuestion?.correctAnswerIndex) {
-                roundText = "Resposta correcta!"
-                score++
-            } else {
-                roundText = "Resposta incorrecta..."
+            when (userAnswer) {
+                -1 -> {
+                    roundText = "Temps esgotat!"
+                }
+                currentQuestion?.correctAnswerIndex -> {
+                    roundText = "Resposta correcta!"
+                    scoreViewModel.incrementScore()
+                }
+                else -> {
+                    roundText = "Resposta incorrecta..."
+                }
             }
             mostrarResultat = true
             viewModelScope.launch {
-                delay(2000) // Reduced delay to 2 seconds for better UX
+                delay(5000)
                 mostrarResultat = false
-                if (currentRound >= totalRounds) {
+                if (currentRound >= settingsViewModel.selectedRounds) {
                     gameFinished = true
                     navigateToResultScreen()
                 } else {
@@ -64,14 +71,6 @@ class GameViewModel() : ViewModel(){
                     currentRound++
                 }
             }
-        }
-    }
-
-
-    suspend fun loadProgress(updateProgress: (Float) -> Unit) {
-        for (i in 1..50) {
-            updateProgress(i.toFloat() / 100)
-            delay(100)
         }
     }
 }

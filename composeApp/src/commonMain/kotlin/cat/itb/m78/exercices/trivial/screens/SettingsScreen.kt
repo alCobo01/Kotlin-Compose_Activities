@@ -26,15 +26,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cat.itb.m78.exercices.trivial.SettingsViewModel
-import cat.itb.m78.exercices.trivial.TrivialDifficulty
-import cat.itb.m78.exercices.trivial.TrivialTheme
+import cat.itb.m78.exercices.trivial.viewModel.SettingsViewModel
+import cat.itb.m78.exercices.trivial.viewModel.TrivialDifficulty
+import cat.itb.m78.exercices.trivial.viewModel.TrivialTheme
 import cat.itb.m78.exercices.trivial.brush
 import kotlin.math.roundToInt
 
 @Composable
-fun SettingsScreen(navigateToMenuScreen: () -> Unit) {
-    val settingsViewModel: SettingsViewModel = viewModel { SettingsViewModel() }
+fun SettingsScreen(navigateToMenuScreen: () -> Unit, settingsViewModel: SettingsViewModel) {
     SettingsScreenView(navigateToMenuScreen, settingsViewModel)
 }
 

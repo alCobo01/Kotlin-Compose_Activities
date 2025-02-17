@@ -1,4 +1,4 @@
-package cat.itb.m78.exercices.trivial
+package cat.itb.m78.exercices.trivial.viewModel
 
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf

@@ -9,18 +9,13 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
-import cat.itb.m78.exercices.trivial.GameViewModel
 import cat.itb.m78.exercices.trivial.brush
+import cat.itb.m78.exercices.trivial.viewModel.GameViewModel
 
 @Composable
-fun ResultScreen(navigateToMenuScreen: () -> Unit){
-    val viewModel: GameViewModel = viewModel { GameViewModel() }
-
+fun ResultScreen(navigateToMenuScreen: () -> Unit, viewModel: GameViewModel){
     ResultScreenView(navigateToMenuScreen, viewModel)
-
 }
-
 
 @Composable
 fun ResultScreenView(navigateToMenuScreen: () -> Unit, viewModel: GameViewModel){
@@ -30,7 +25,7 @@ fun ResultScreenView(navigateToMenuScreen: () -> Unit, viewModel: GameViewModel)
         modifier = Modifier.fillMaxSize().background(brush)
     ) {
         Text("Has aconseguit")
-        Text("${viewModel.score}")
+        Text("${viewModel.scoreViewModel.currentScore}")
         Button(onClick = navigateToMenuScreen){ Text("Tornar al menú inicial!") }
     }
 }
