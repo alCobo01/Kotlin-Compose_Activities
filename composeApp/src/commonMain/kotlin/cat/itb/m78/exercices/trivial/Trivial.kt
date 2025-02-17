@@ -34,7 +34,6 @@ fun Trivial(){
     val settingsViewModel: SettingsViewModel = viewModel { SettingsViewModel() }
     val gameViewModel: GameViewModel = viewModel { GameViewModel(settingsViewModel) }
 
-
     NavHost(navController = navController, startDestination = Destination.MenuScreen){
         composable<Destination.MenuScreen> {
             MenuScreen(

@@ -8,7 +8,7 @@ data class Question(
     val difficulty: String
 )
 
-val questions = listOf(
+var questions = listOf(
     // Historia
     Question(
         text = "Quina civilitzacio va construir les piramides d'Egipte?",

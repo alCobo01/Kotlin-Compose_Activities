@@ -42,28 +42,31 @@ fun MenuScreen(navigateToGameScreen: () -> Unit, navigateToSettingsScreen: () ->
             fontSize = 60.sp,
             fontFamily = FontFamily(Font(Res.font.VeniteAdoremus))
         )
+
         Image(
             painter = painterResource(Res.drawable.trivialLogo),
             contentDescription = null,
             modifier = Modifier.size(200.dp).clip(CircleShape)
         )
+
         Spacer(modifier = Modifier.padding(10.dp))
+
         Button(
             onClick = {
                 navigateToGameScreen()
                 gameViewModel.resetGame()
             },
-            modifier = Modifier.height(40.dp).width(120.dp),
+            modifier = Modifier.height(40.dp).width(150.dp),
             colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF5E5E5E)))
-        { Text("Game") }
+        { Text("Jugar!") }
 
         Spacer(modifier = Modifier.padding(6.dp))
 
         Button(
             onClick = navigateToSettingsScreen,
-            modifier = Modifier.height(40.dp).width(120.dp),
+            modifier = Modifier.height(40.dp).width(150.dp),
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color(0xFF5E5E5E)
-            )) { Text("Settings") }
+            )) { Text("Configuració") }
     }
 }

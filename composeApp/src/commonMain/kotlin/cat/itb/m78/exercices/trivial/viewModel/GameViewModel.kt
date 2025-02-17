@@ -10,6 +10,7 @@ import cat.itb.m78.exercices.trivial.questions
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+
 class GameViewModel(private val settingsViewModel: SettingsViewModel) : ViewModel(){
     val scoreViewModel = ScoreViewModel()
 
@@ -27,6 +28,7 @@ class GameViewModel(private val settingsViewModel: SettingsViewModel) : ViewMode
         scoreViewModel.resetScore()
         currentRound = 1
         gameFinished = false
+        questions = questions.shuffled()
         currentQuestion = randomQuestion()
         roundText = ""
     }
@@ -40,7 +42,7 @@ class GameViewModel(private val settingsViewModel: SettingsViewModel) : ViewMode
             question = questions.random()
             theme = question.category
             difficulty = question.difficulty
-        } while (theme != settingsViewModel.selectedTheme.toString() || difficulty != settingsViewModel.selectedDifficulty.toString())
+        } while (theme != settingsViewModel.selectedTheme.name && difficulty != settingsViewModel.selectedDifficulty.name)
 
         return question
     }

@@ -4,18 +4,24 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowDropDown
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
@@ -25,7 +31,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import cat.itb.m78.exercices.trivial.viewModel.SettingsViewModel
 import cat.itb.m78.exercices.trivial.viewModel.TrivialDifficulty
 import cat.itb.m78.exercices.trivial.viewModel.TrivialTheme
@@ -46,6 +54,8 @@ fun SettingsScreenView(navigateToMenuScreen: () -> Unit, viewModel: SettingsView
     val difficultyOptions = TrivialDifficulty.entries
     val roundsOptions = listOf(5, 10, 15)
 
+    val buttonColor = Color(0xFF5E5E5E)
+
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
@@ -56,7 +66,7 @@ fun SettingsScreenView(navigateToMenuScreen: () -> Unit, viewModel: SettingsView
                 readOnly = true,
                 value = viewModel.selectedTheme.name,
                 onValueChange = {},
-                label = { Text("Theme") },
+                label = { Text("Temàtica") },
                 trailingIcon = {
                     IconButton(onClick = { expandedTheme = !expandedTheme }) {
                         Icon(Icons.Filled.ArrowDropDown, "dropdown arrow")
@@ -78,12 +88,15 @@ fun SettingsScreenView(navigateToMenuScreen: () -> Unit, viewModel: SettingsView
                 }
             }
         }
+
+        Spacer(modifier = Modifier.padding(10.dp))
+
         Column {
             TextField(
                 readOnly = true,
                 value = viewModel.selectedDifficulty.name,
                 onValueChange = {},
-                label = { Text("Difficulty") },
+                label = { Text("Dificultat") },
                 trailingIcon = {
                     IconButton(onClick = { expandedDifficulty = !expandedDifficulty }) {
                         Icon(Icons.Filled.ArrowDropDown, "dropdown arrow")
@@ -106,7 +119,14 @@ fun SettingsScreenView(navigateToMenuScreen: () -> Unit, viewModel: SettingsView
             }
         }
 
-        Text("Rounds", style = MaterialTheme.typography.bodyLarge)
+        Spacer(modifier = Modifier.padding(10.dp))
+
+        Text(
+            text = "Nombre de rondes",
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold
+        )
+
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.SpaceEvenly,
@@ -119,7 +139,10 @@ fun SettingsScreenView(navigateToMenuScreen: () -> Unit, viewModel: SettingsView
                             selected = viewModel.selectedRounds == rounds,
                             onClick = {
                                 viewModel.updateRounds(rounds)
-                            }
+                            },
+                            colors = RadioButtonDefaults.colors(
+                                selectedColor = buttonColor
+                            )
                         )
                         Text(text = rounds.toString())
                     }
@@ -127,18 +150,33 @@ fun SettingsScreenView(navigateToMenuScreen: () -> Unit, viewModel: SettingsView
             }
         }
 
-        Text("Time per round", style = MaterialTheme.typography.bodyLarge)
+        Spacer(modifier = Modifier.padding(10.dp))
+
+        Text(
+            text = "Temps per ronda",
+            style = MaterialTheme.typography.bodyLarge,
+            fontWeight = FontWeight.Bold
+        )
+
+        Spacer(modifier = Modifier.padding(4.dp))
 
         Slider(
             value = viewModel.selectedTime,
             onValueChange = { viewModel.updateTime(it.roundToInt().toFloat()) },
             steps = 5,
-            valueRange = 4f..10f
+            valueRange = 4f..10f,
+            modifier = Modifier.width(300.dp),
+            colors = SliderDefaults.colors(
+                activeTrackColor = buttonColor,
+                thumbColor = buttonColor
+            )
         )
-        Text(text = viewModel.selectedTime.toString())
+        Text(text = "${viewModel.selectedTime.toInt()} segons")
 
-        Button(onClick = navigateToMenuScreen) {
-            Text("Return to menu")
-        }
+        Spacer(modifier = Modifier.padding(10.dp))
+
+        Button(onClick = navigateToMenuScreen, colors = ButtonDefaults.buttonColors(
+            containerColor = buttonColor)
+        ) { Text("Tornar al menú inicial") }
     }
 }
