@@ -73,7 +73,7 @@ class JokesViewModel : ViewModel(){
     }
 
 @Composable
-fun JokesScreen(){
+fun JokesScreen() {
     val viewModel: JokesViewModel = viewModel { JokesViewModel() }
     val joke = viewModel.joke.value
 
@@ -94,6 +94,5 @@ fun JokesScreen(){
             Text(text = "New Joke")
         }
     }
-
-
+    }
 }
