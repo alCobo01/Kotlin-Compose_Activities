@@ -24,6 +24,8 @@ object MyApi {
         }
     }
     suspend fun list() = client.get(URL).body<List<Embassaments>>()
+
+    suspend fun find(name: String) = client.get("$URL?estaci=$name").body<List<Embassaments>>()
 }
 
 @Serializable
@@ -36,11 +38,10 @@ data class Embassaments(
 )
 
 class EmbassamentsViewModel : ViewModel() {
+    private val embDummy = Embassaments("", "", 0.0, 0.0, 0.0)
+
     var embassamentsList = mutableStateOf<List<Embassaments>>(emptyList())
-
-    fun selectEmbassament(index: Int){
-
-    }
+    var selectedEmbassament = mutableStateOf(embDummy)
 
 
     init {

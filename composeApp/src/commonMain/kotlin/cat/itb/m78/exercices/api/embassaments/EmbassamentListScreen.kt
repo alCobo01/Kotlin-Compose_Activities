@@ -10,7 +10,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
-
 @Composable
 fun EmbassamentFirstScreen(navigateToSecondScreen: () -> Unit, viewModel: EmbassamentsViewModel){
     EmbassamentFirstScreenArgument(navigateToSecondScreen, viewModel)
@@ -24,7 +23,7 @@ fun EmbassamentFirstScreenArgument(navigateToSecondScreen: () -> Unit, viewModel
                 Card(
                     modifier = Modifier.padding(10.dp).fillMaxWidth()
                 ) {
-                    Button(onClick = { navigateToSecondScreen() }) {
+                    Button(onClick = { viewModel.selectedEmbassament.value = it; navigateToSecondScreen() }) {
                         Text(text = it.estacio)
                     }
                 }
