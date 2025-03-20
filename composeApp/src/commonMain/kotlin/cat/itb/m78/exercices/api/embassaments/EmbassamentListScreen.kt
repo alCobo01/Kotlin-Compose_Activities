@@ -11,12 +11,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun EmbassamentFirstScreen(navigateToSecondScreen: () -> Unit, viewModel: EmbassamentsViewModel){
-    EmbassamentFirstScreenArgument(navigateToSecondScreen, viewModel)
+fun EmbassamentListScreen(navigateToSecondScreen: () -> Unit){
+    val viewModel = EmbassamentListViewModel()
+    EmbassamentListScreenArgument(navigateToSecondScreen, viewModel)
 }
 
 @Composable
-fun EmbassamentFirstScreenArgument(navigateToSecondScreen: () -> Unit, viewModel: EmbassamentsViewModel){
+fun EmbassamentListScreenArgument(navigateToSecondScreen: () -> Unit, viewModel: EmbassamentListViewModel){
     LazyColumn {
         viewModel.embassamentsList.value.forEach {
             item {

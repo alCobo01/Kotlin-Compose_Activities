@@ -8,18 +8,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun EmbassamentSecondScreen(navigateToFirstScreen: () -> Unit, viewModel: EmbassamentsViewModel){
-    val selectedEmbassament = viewModel.selectedEmbassament.value
-    EmbassamentSecondScreenArgument(navigateToFirstScreen, selectedEmbassament)
+fun EmbassamentDetailScreen(navigateToFirstScreen: () -> Unit, name: String){
+    val viewModel = EmbassamentDetailViewModel(name)
+    val selectedEmbassament = viewModel.selectedEmbassament
+    EmbassamentDetailScreenArgument(navigateToFirstScreen, selectedEmbassament)
 }
 
 @Composable
-fun EmbassamentSecondScreenArgument(navigateToFirstScreen: () -> Unit, selectedEmbassament: Embassaments){
+fun EmbassamentDetailScreenArgument(navigateToFirstScreen: () -> Unit, selectedEmbassament: MutableState<List<Embassaments>>){
     Column(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,

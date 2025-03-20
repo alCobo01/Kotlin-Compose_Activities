@@ -37,12 +37,11 @@ data class Embassaments(
     @SerialName("volum_embassat") val volumEmbassat: Double
 )
 
-class EmbassamentsViewModel : ViewModel() {
+class EmbassamentListViewModel : ViewModel() {
     private val embDummy = Embassaments("", "", 0.0, 0.0, 0.0)
 
     var embassamentsList = mutableStateOf<List<Embassaments>>(emptyList())
     var selectedEmbassament = mutableStateOf(embDummy)
-
 
     init {
         viewModelScope.launch(Dispatchers.Default) {

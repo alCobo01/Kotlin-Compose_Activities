@@ -9,28 +9,25 @@ import kotlinx.serialization.Serializable
 
 object Destination{
     @Serializable
-    data object EmbassamentFirstScreen
+    data object EmbassamentListScreen
     @Serializable
-    data object EmbassamentSecondScreen
+    data class EmbassamentDetailScreen(val embassament: String)
 }
 
 @Composable
 fun Embassaments(){
     val navController = rememberNavController()
-    val viewModel : EmbassamentsViewModel = viewModel { EmbassamentsViewModel() }
 
-    NavHost(navController = navController, startDestination = Destination.EmbassamentFirstScreen){
-        composable<Destination.EmbassamentFirstScreen> {
-            EmbassamentFirstScreen(
-                navigateToSecondScreen = { navController.navigate(Destination.EmbassamentSecondScreen) },
-                viewModel = viewModel
+    NavHost(navController = navController, startDestination = Destination.EmbassamentListScreen){
+        composable<Destination.EmbassamentListScreen> {
+            EmbassamentListScreen(
+                navigateToSecondScreen = { navController.navigate(Destination.EmbassamentDetailScreen) }
             )
         }
 
-        composable<Destination.EmbassamentSecondScreen> {
-            EmbassamentSecondScreen(
-                navigateToFirstScreen = { navController.navigate(Destination.EmbassamentFirstScreen) },
-                viewModel = viewModel
+        composable<Destination.EmbassamentDetailScreen> {
+            EmbassamentDetailScreen(
+                navigateToFirstScreen = { navController.navigate(Destination.EmbassamentListScreen) }
             )
         }
 
