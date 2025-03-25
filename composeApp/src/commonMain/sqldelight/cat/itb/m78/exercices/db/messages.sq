@@ -1,0 +1,15 @@
+CREATE TABLE Messages (
+  id INTEGER PRIMARY KEY NOT NULL,
+  text TEXT NOT NULL
+);
+
+CREATE INDEX myTable_full_name ON Messages(text);
+
+selectAll:
+SELECT * FROM Messages;
+
+insert:
+INSERT INTO Messages(text) VALUES (?);
+
+selectById:
+SELECT * FROM Messages WHERE id = ?;

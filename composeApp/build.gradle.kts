@@ -11,6 +11,7 @@ plugins {
     alias(libs.plugins.compose.hotreload)
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlinx.serialization)
+    id("app.cash.sqldelight") version "2.0.2"
 }
 
 composeCompiler {
@@ -63,6 +64,7 @@ kotlin {
             implementation("io.ktor:ktor-client-core:3.0.2")
             implementation("io.ktor:ktor-client-cio:3.0.2")
             implementation("io.ktor:ktor-client-content-negotiation:3.0.2")
+            implementation("app.cash.sqldelight:coroutines-extensions:2.0.2")
         }
 
         commonTest.dependencies {
@@ -77,12 +79,14 @@ kotlin {
             implementation(libs.androidx.activityCompose)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.ktor.client.okhttp)
+            implementation("app.cash.sqldelight:android-driver:2.0.2")
         }
 
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.ktor.client.okhttp)
+            implementation("app.cash.sqldelight:sqlite-driver:2.0.2")
         }
 
         iosMain.dependencies {
@@ -113,6 +117,7 @@ dependencies {
     implementation(libs.androidx.material3.android)
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.androidx.ui.android)
+    implementation(libs.androidx.room.common)
     androidTestImplementation(libs.androidx.uitest.junit4)
     debugImplementation(libs.androidx.uitest.testManifest)
 }
@@ -136,6 +141,16 @@ compose.desktop {
                 iconFile.set(project.file("desktopAppIcons/MacosIcon.icns"))
                 bundleID = "cat.itb.m78.exercices.desktopApp"
             }
+        }
+    }
+}
+
+sqldelight {
+    databases {
+        create("Database") {
+            packageName.set("cat.itb.m78.exercices.db")
+            schemaOutputDirectory.set(file("src/commonMain/sqldelight/databases"))
+            verifyMigrations.set(true)
         }
     }
 }
