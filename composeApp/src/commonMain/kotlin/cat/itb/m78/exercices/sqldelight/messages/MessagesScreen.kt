@@ -23,11 +23,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.compose.material3.Card
+import cat.itb.m78.exercices.db.Messages
 
 @Composable
-fun MessagesScreen(){
+fun MessagesScreen() {
     val viewModel = viewModel { MessagesViewModel() }
-    val listMessages by remember { mutableStateOf(viewModel.getAllMessages()) }
+    MessagesScreenArguments(viewModel.listMessages.value, viewModel::insertMessage, viewModel::deleteMessages)
+}
+
+@Composable
+fun MessagesScreenArguments(listMessages: List<Messages>, insertToDB: (String) -> Unit,
+                            deleteFromDB: () -> Unit){
     var message by remember { mutableStateOf("") }
 
     Column(
@@ -41,10 +47,16 @@ fun MessagesScreen(){
         )
 
         Button(onClick = {
-            viewModel.insertMessage(message)
+            insertToDB(message)
             message = ""
         }) {
             Text("Add")
+        }
+        Button(onClick = {
+            deleteFromDB()
+            message = ""
+        }) {
+            Text("Delete all messages")
         }
 
         Spacer(modifier = Modifier.height(16.dp))

@@ -11,5 +11,5 @@ SELECT * FROM Messages;
 insert:
 INSERT INTO Messages(text) VALUES (?);
 
-selectById:
-SELECT * FROM Messages WHERE id = ?;
+deleteAll:
+DELETE FROM Messages;

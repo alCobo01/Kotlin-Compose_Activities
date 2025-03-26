@@ -7,9 +7,11 @@ import cat.itb.m78.exercices.sqldelight.database
 
 class MessagesViewModel : ViewModel() {
     private val messageQueries = database.messagesQueries
-    val listMessages = mutableStateOf<List<Messages>>(listOf(messageQueries.selectAll().executeAsList()))
+    val listMessages = mutableStateOf(messageQueries.selectAll().executeAsList())
 
-    fun getAllMessages() = messageQueries.selectAll().executeAsList()
+    private fun getAllMessages() = messageQueries.selectAll().executeAsList()
 
-    fun insertMessage(message: String) = messageQueries.insert(message)
+    fun insertMessage(message: String) { messageQueries.insert(message); listMessages.value = getAllMessages() }
+
+    fun deleteMessages() { messageQueries.deleteAll(); listMessages.value = getAllMessages() }
 }
