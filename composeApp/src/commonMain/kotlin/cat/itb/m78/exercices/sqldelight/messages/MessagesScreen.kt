@@ -49,15 +49,12 @@ fun MessagesScreenArguments(listMessages: List<Messages>, insertToDB: (String) -
         Button(onClick = {
             insertToDB(message)
             message = ""
-        }) {
-            Text("Add")
-        }
+        }) { Text("Add a message") }
+
         Button(onClick = {
             deleteFromDB()
             message = ""
-        }) {
-            Text("Delete all messages")
-        }
+        }) { Text("Delete all messages") }
 
         Spacer(modifier = Modifier.height(16.dp))
 
