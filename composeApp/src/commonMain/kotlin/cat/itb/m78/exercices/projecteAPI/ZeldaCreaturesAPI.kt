@@ -21,14 +21,14 @@ data class CreatureSingleResponse(
 
 @Serializable
 data class Creature(
+    @SerialName("id") val id: Int,
     @SerialName("name") val name: String,
     @SerialName("description") val description: String,
     @SerialName("image") val image: String
 )
 
 object ZeldaCreaturesAPI {
-    private const val url =
-        "https://botw-compendium.herokuapp.com/api/v3/compendium"
+    private const val url = "https://botw-compendium.herokuapp.com/api/v3/compendium"
     private val client = HttpClient() {
         install(ContentNegotiation) {
             json(Json { ignoreUnknownKeys = true })
@@ -36,11 +36,12 @@ object ZeldaCreaturesAPI {
     }
 
     suspend fun list() : List<Creature> {
-        return client.get("$url/all?category=creatures").body<CreatureListResponse>().data
+        return client.get("$url/category/creatures").body<CreatureListResponse>().data
     }
 
-    suspend fun find(name: String) : Creature {
-        return client.get("$url/entry/$name").body<CreatureSingleResponse>().data
+    suspend fun find(id: Int) : Creature {
+        println("$url/entry/$id")
+        return client.get("$url/entry/$id").body<CreatureSingleResponse>().data
     }
 
 
