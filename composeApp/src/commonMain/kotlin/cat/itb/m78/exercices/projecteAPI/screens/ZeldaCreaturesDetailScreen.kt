@@ -1,4 +1,4 @@
-package cat.itb.m78.exercices.projecteAPI.Screens
+package cat.itb.m78.exercices.projecteAPI.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cat.itb.m78.exercices.projecteAPI.ContentLoading
 import cat.itb.m78.exercices.projecteAPI.Creature
-import cat.itb.m78.exercices.projecteAPI.ViewModels.ZeldaCreaturesDetailViewModel
+import cat.itb.m78.exercices.projecteAPI.viewModels.ZeldaCreaturesDetailViewModel
 import coil3.compose.AsyncImagePainter
 import coil3.compose.rememberAsyncImagePainter
 

@@ -1,4 +1,4 @@
-package cat.itb.m78.exercices.projecteAPI.ViewModels
+package cat.itb.m78.exercices.projecteAPI.viewModels
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
