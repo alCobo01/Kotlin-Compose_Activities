@@ -67,7 +67,12 @@ fun ZeldaCreatures(){
             }
 
             composable<Destination.ZeldaCreaturesFavoritesScreen> {
-                ZeldaCreaturesFavoritesScreen()
+                ZeldaCreaturesFavoritesScreen(
+                    navigateToListScreen = { navController.navigate(Destination.ZeldaCreaturesListScreen) },
+                    navigateToDetailScreen = { creatureName: Int ->
+                        navController.navigate(Destination.ZeldaCreaturesDetailScreen(id = creatureName))
+                    }
+                )
             }
         }
     }

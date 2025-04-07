@@ -5,10 +5,13 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import cat.itb.m78.exercices.projecteAPI.Creature
 import cat.itb.m78.exercices.projecteAPI.ZeldaCreaturesAPI
+import cat.itb.m78.exercices.sqldelight.database
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ZeldaCreaturesDetailViewModel(selectedCreatureName: Int) : ViewModel() {
+    private val creaturesQueries = database.zeldaCreaturesQueries
+
     private val dummyCreature = Creature(0, "", "", "")
     var selectedCreature = mutableStateOf(dummyCreature)
 
@@ -17,4 +20,8 @@ class ZeldaCreaturesDetailViewModel(selectedCreatureName: Int) : ViewModel() {
             selectedCreature.value = ZeldaCreaturesAPI.find(selectedCreatureName)
         }
     }
+
+    fun likeCreature(id: Int) { creaturesQueries.insert(id.toLong()) }
+
+    fun dislikeCreature(id: Int) { creaturesQueries.delete(id.toLong()) }
 }
