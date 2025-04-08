@@ -7,7 +7,6 @@ expect fun createDriver(): SqlDriver
 
 fun createDatabase() : Database {
     val driver = createDriver()
-    Database.Schema.migrateIfNeeded(driver)
     return Database(driver)
 }
 

@@ -56,15 +56,15 @@ kotlin {
             implementation(libs.androidx.navigation.composee)
             implementation(libs.kotlinx.serialization.json)
             implementation(libs.kotlinx.datetime)
-            implementation("io.ktor:ktor-serialization-kotlinx-json:3.0.2")
-            implementation("com.russhwolf:multiplatform-settings-no-arg:1.3.0")
-            implementation("com.russhwolf:multiplatform-settings-serialization:1.3.0")
-            implementation("io.coil-kt.coil3:coil-compose:3.1.0")
-            implementation("io.coil-kt.coil3:coil-network-ktor3:3.1.0")
-            implementation("io.ktor:ktor-client-core:3.0.2")
-            implementation("io.ktor:ktor-client-cio:3.0.2")
-            implementation("io.ktor:ktor-client-content-negotiation:3.0.2")
-            implementation("app.cash.sqldelight:coroutines-extensions:2.0.2")
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.multiplatform.settings.no.arg)
+            implementation(libs.multiplatform.settings.serialization)
+            implementation(libs.coil.compose)
+            implementation(libs.coil.network.ktor3)
+            implementation(libs.ktor.client.core.v302)
+            implementation(libs.ktor.client.cio)
+            implementation(libs.ktor.client.content.negotiation.v302)
+            implementation(libs.coroutines.extensions)
         }
 
         commonTest.dependencies {
@@ -79,14 +79,20 @@ kotlin {
             implementation(libs.androidx.activityCompose)
             implementation(libs.kotlinx.coroutines.android)
             implementation(libs.ktor.client.okhttp)
-            implementation("app.cash.sqldelight:android-driver:2.0.2")
+            implementation(libs.android.driver)
+            implementation(libs.accompanist.permissions)
+            implementation(libs.androidx.camera.core)
+            implementation(libs.androidx.camera.camera2)
+            implementation(libs.androidx.camera.compose)
+            implementation(libs.androidx.camera.lifecycle)
+            implementation(libs.androidx.camera.extensions)
         }
 
         jvmMain.dependencies {
             implementation(compose.desktop.currentOs)
             implementation(libs.kotlinx.coroutines.swing)
             implementation(libs.ktor.client.okhttp)
-            implementation("app.cash.sqldelight:sqlite-driver:2.0.2")
+            implementation(libs.sqlite.driver)
         }
 
         iosMain.dependencies {
