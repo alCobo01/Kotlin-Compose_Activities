@@ -25,14 +25,18 @@ import coil3.compose.rememberAsyncImagePainter
 @Composable
 fun ZeldaCreaturesDetailScreen(navigateToListScreen: () -> Unit, selectedCreatureName : Int){
     val viewModel = viewModel { ZeldaCreaturesDetailViewModel(selectedCreatureName) }
-    val selectedCreature = viewModel.selectedCreature
 
-    ZeldaCreaturesDetailScreenArguments(navigateToListScreen, selectedCreature)
+    ZeldaCreaturesDetailScreenArguments(navigateToListScreen, viewModel)
 }
 
 
 @Composable
-fun ZeldaCreaturesDetailScreenArguments(navigateToListScreen: () -> Unit, selectedCreature : MutableState<Creature>){
+fun ZeldaCreaturesDetailScreenArguments(
+    navigateToListScreen: () -> Unit,
+    viewModel: ZeldaCreaturesDetailViewModel
+){
+    val selectedCreature : MutableState<Creature> = viewModel.selectedCreature
+
     if (selectedCreature.value.name.isEmpty()) {
         ContentLoading()
     } else {
@@ -62,16 +66,18 @@ fun ZeldaCreaturesDetailScreenArguments(navigateToListScreen: () -> Unit, select
                     Image(
                         painter = painter,
                         contentDescription = selectedCreature.value.name,
-                        modifier = Modifier.height(200.dp)                    )
+                        modifier = Modifier.height(200.dp)
+                    )
                 }
             }
-
 
             Spacer(Modifier.height(16.dp))
 
             Text(selectedCreature.value.description)
 
             Spacer(Modifier.height(16.dp))
+
+            Button(onClick = {viewModel.changeFavState(selectedCreature.value.id) }) { Text("Add to favorites") }
 
             Button(onClick = navigateToListScreen){ Text("Return to all creatures!") }
         }

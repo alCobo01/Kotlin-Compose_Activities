@@ -21,7 +21,16 @@ class ZeldaCreaturesDetailViewModel(selectedCreatureName: Int) : ViewModel() {
         }
     }
 
-    fun likeCreature(id: Int) { creaturesQueries.insert(id.toLong()) }
+    fun changeFavState(creatureId: Int){
+        if (isFav(creatureId)){
+            creaturesQueries.delete(creatureId.toLong())
+        } else {
+            creaturesQueries.insert(creatureId.toLong())
+        }
+    }
 
-    fun dislikeCreature(id: Int) { creaturesQueries.delete(id.toLong()) }
+    private fun isFav(creatureId: Int): Boolean {
+        val isFav = creaturesQueries.selectAll().executeAsList()
+        return creatureId.toLong() in isFav
+    }
 }

@@ -33,17 +33,16 @@ import cat.itb.m78.exercices.projecteAPI.viewModels.ZeldaCreaturesFavoritesViewM
 import coil3.compose.AsyncImage
 
 @Composable
-fun ZeldaCreaturesFavoritesScreen(navigateToListScreen: () -> Unit, navigateToDetailScreen: (Int) -> Unit){
+fun ZeldaCreaturesFavoritesScreen(navigateToDetailScreen: (Int) -> Unit){
     val viewModel = viewModel { ZeldaCreaturesFavoritesViewModel() }
     val favoritesCreatures = viewModel.likedCreatures
     val isLoading = viewModel.isLoading
 
-    ZeldaCreaturesFavoritesScreenArguments(navigateToListScreen, navigateToDetailScreen, favoritesCreatures, isLoading)
+    ZeldaCreaturesFavoritesScreenArguments(navigateToDetailScreen, favoritesCreatures, isLoading)
 }
 
 @Composable
 fun ZeldaCreaturesFavoritesScreenArguments(
-    navigateToListScreen: () -> Unit,
     navigateToDetailScreen: (Int) -> Unit,
     favoritesCreatures: MutableState<List<Creature>>,
     isLoading: Boolean

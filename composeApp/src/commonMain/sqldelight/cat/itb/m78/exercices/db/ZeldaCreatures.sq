@@ -7,6 +7,9 @@ CREATE INDEX ZeldaCreatures ON ZeldaCreatures(id);
 selectAll:
 SELECT * FROM ZeldaCreatures;
 
+selectById:
+SELECT * FROM ZeldaCreatures WHERE id = ?;
+
 insert:
 INSERT INTO ZeldaCreatures(id) VALUES (?);
 
