@@ -12,7 +12,6 @@ import cat.itb.m78.exercices.db.Database
 actual fun createDriver(): SqlDriver {
     val dbDir = System.getProperty("user.home")
     val file = Path(dbDir, "myDatabase.db")
-    println("DEBUG: Using database path: ${file.absolutePathString()}")
     val driver = JdbcSqliteDriver("jdbc:sqlite:${file.absolutePathString()}")
     //migrateIfNeeded(driver, Database.Schema)
     return driver

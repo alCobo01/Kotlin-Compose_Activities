@@ -65,6 +65,7 @@ kotlin {
             implementation(libs.ktor.client.cio)
             implementation(libs.ktor.client.content.negotiation.v302)
             implementation(libs.coroutines.extensions)
+            implementation(libs.foundation.desktop)
         }
 
         commonTest.dependencies {
@@ -125,6 +126,9 @@ dependencies {
     implementation(libs.androidx.ui.android)
     implementation(libs.androidx.room.common)
     implementation(libs.androidx.animation.graphics.android)
+    implementation(libs.material3.android)
+    implementation(libs.androidx.ui.graphics.android)
+    implementation(libs.androidx.foundation.layout.android)
     androidTestImplementation(libs.androidx.uitest.junit4)
     debugImplementation(libs.androidx.uitest.testManifest)
 }

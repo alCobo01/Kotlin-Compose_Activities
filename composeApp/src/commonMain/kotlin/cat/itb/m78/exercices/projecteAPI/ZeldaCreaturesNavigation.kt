@@ -1,15 +1,18 @@
 package cat.itb.m78.exercices.projecteAPI
 
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Star
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -33,7 +36,9 @@ fun ZeldaCreatures(){
     val navController = rememberNavController()
 
     Scaffold(bottomBar = {
-        NavigationBar{
+        NavigationBar(
+            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.9f)
+        ) {
             NavigationBarItem(
                 selected = false,
                 onClick = { navController.navigate(Destination.ZeldaCreaturesListScreen) },
@@ -47,8 +52,12 @@ fun ZeldaCreatures(){
                 label = { Text("Favorites") }
             )
         }
-    }) {
-        NavHost(navController = navController, startDestination = Destination.ZeldaCreaturesListScreen){
+    }) { innerPadding ->
+        NavHost(
+            navController = navController,
+            startDestination = Destination.ZeldaCreaturesListScreen,
+            modifier = Modifier.padding(innerPadding)
+        ){
             composable<Destination.ZeldaCreaturesListScreen> {
                 ZeldaCreaturesListScreen(
                     navigateToDetailScreen = { creatureName: Int ->

@@ -40,9 +40,6 @@ object ZeldaCreaturesAPI {
     }
 
     suspend fun find(id: Int) : Creature {
-        println("$url/entry/$id")
         return client.get("$url/entry/$id").body<CreatureSingleResponse>().data
     }
-
-
 }

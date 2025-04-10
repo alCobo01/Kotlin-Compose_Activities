@@ -11,5 +11,5 @@ import cat.itb.m78.exercices.theme.AppTheme
 
 @Composable
 fun App() = AppTheme {
-    LlistaAssistencia()
+    ZeldaCreatures()
 }

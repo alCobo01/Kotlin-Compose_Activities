@@ -2,25 +2,16 @@ package cat.itb.m78.exercices.projecteAPI.screens
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Favorite
-import androidx.compose.material3.Button
-import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
@@ -29,17 +20,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cat.itb.m78.exercices.projecteAPI.ContentLoading
 import cat.itb.m78.exercices.projecteAPI.Creature
+import cat.itb.m78.exercices.projecteAPI.StyledTextField
+import cat.itb.m78.exercices.projecteAPI.ThreeRowCard
+import cat.itb.m78.exercices.projecteAPI.TitleText
+import cat.itb.m78.exercices.projecteAPI.TwoOrOneRowCard
 import cat.itb.m78.exercices.projecteAPI.brush
 import cat.itb.m78.exercices.projecteAPI.viewModels.ZeldaCreaturesListViewModel
-import coil3.compose.AsyncImage
-import kotlin.math.round
 
 @Composable
 fun ZeldaCreaturesListScreen(navigateToDetailScreen: (Int) -> Unit) {
@@ -52,6 +42,8 @@ fun ZeldaCreaturesListScreen(navigateToDetailScreen: (Int) -> Unit) {
 @Composable
 fun ZeldaCreaturesListScreenArguments(navigateToDetailScreen: (selectedCreatureName: Int) -> Unit, creaturesList: List<Creature> ) {
     var userInput by remember { mutableStateOf("") }
+    val listState = rememberLazyListState()
+
     Column(
         modifier = Modifier.fillMaxSize().background(brush)
     ) {
@@ -63,84 +55,39 @@ fun ZeldaCreaturesListScreenArguments(navigateToDetailScreen: (selectedCreatureN
                 verticalArrangement = Arrangement.Center,
                 modifier = Modifier.fillMaxSize()
             ) {
-                TextField(
-                    value = userInput,
+                TitleText("Zelda creatures")
+
+                StyledTextField(
                     onValueChange = { userInput = it },
-                    label = { Text("Search a creature!") }
+                    value = userInput
                 )
 
-                LazyColumn {
-                    val filteredList = creaturesList.filter { it.name.contains(userInput, ignoreCase = true) }
-                    if (filteredList.isEmpty()) {
-                        item {
-                            Text("No creatures found")
-                        }
-                    }
-                    val rows = filteredList.chunked(3)
-                    rows.forEach { rowItems ->
-                        if (rowItems.size == 3) {
+                Box(modifier = Modifier.fillMaxWidth(0.8f).fillMaxHeight()){
+                    LazyColumn(state = listState, modifier = Modifier.fillMaxSize().padding(end = 16.dp)) {
+                        val filteredList = creaturesList.filter { it.name.contains(userInput, ignoreCase = true) }
+                        if (filteredList.isEmpty()) {
                             item {
-                                Row {
-                                    for (it in rowItems) {
-                                        Card(
-                                            modifier = Modifier
-                                                .padding(16.dp)
-                                                .weight(1f),
-                                            onClick = { navigateToDetailScreen(it.id) },
-                                            colors = CardDefaults.cardColors(
-                                                containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
-
-                                        ) {
-                                            Row(
-                                                modifier = Modifier.padding(16.dp).fillMaxWidth(),
-                                                horizontalArrangement = Arrangement.SpaceBetween,
-                                                verticalAlignment = Alignment.CenterVertically
-                                            ) {
-                                                Column(
-                                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                                    verticalArrangement = Arrangement.Center
-                                                ) {
-                                                    Text(text = it.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
-                                                }
-                                                AsyncImage(
-                                                    model = it.image,
-                                                    contentDescription = it.name,
-                                                    modifier = Modifier.clip(shape = RoundedCornerShape(16.dp))
-                                                )
-                                            }
-                                        }
-                                    }
+                                Column(
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                    verticalArrangement = Arrangement.Center,
+                                    modifier = Modifier.fillMaxSize()
+                                ) {
+                                    Text(
+                                        text = "No creatures found!",
+                                        style = MaterialTheme.typography.headlineMedium
+                                    )
                                 }
                             }
-                        } else if (rowItems.size in 1..2) {
-                            item {
-                                Row(
-                                    horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
-                                    modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
-                                ) {
-                                    for (it in rowItems) {
-                                        Card(
-                                            modifier = Modifier.width(400.dp).height(320.dp)
-                                        ) {
-                                            Column(
-                                                horizontalAlignment = Alignment.CenterHorizontally,
-                                                verticalArrangement = Arrangement.Center,
-                                                modifier = Modifier
-                                                    .padding(16.dp)
-                                                    .fillMaxSize()
-                                            ) {
-                                                Button(onClick = { navigateToDetailScreen(it.id) }) {
-                                                    Text(
-                                                        text = it.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() }
-                                                    )
-                                                }
-                                                AsyncImage(
-                                                    model = it.image,
-                                                    contentDescription = it.name
-                                                )
-                                            }
-                                        }
-                                    }
+                        }
+                        val rows = filteredList.chunked(3)
+                        rows.forEach { rowItems ->
+                            if (rowItems.size == 3) {
+                                item {
+                                    ThreeRowCard(navigateToDetailScreen, rowItems)
+                                }
+                            } else if (rowItems.size in 1..2) {
+                                item {
+                                    TwoOrOneRowCard(navigateToDetailScreen, rowItems)
                                 }
                             }
                         }
@@ -149,6 +96,7 @@ fun ZeldaCreaturesListScreenArguments(navigateToDetailScreen: (selectedCreatureN
             }
         }
     }
-
 }
+
+
 
