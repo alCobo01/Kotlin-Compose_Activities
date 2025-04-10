@@ -1,0 +1,11 @@
+CREATE TABLE LlistaFaltesAlumnes (
+    id INTEGER PRIMARY KEY NOT NULL,
+    idEstudiant INTEGER NOT NULL,
+    data TEXT NOT NULL
+);
+
+selectAll:
+SELECT * FROM LlistaFaltesAlumnes;
+
+insert:
+INSERT INTO LlistaFaltesAlumnes(idEstudiant, data) VALUES (?, ?);

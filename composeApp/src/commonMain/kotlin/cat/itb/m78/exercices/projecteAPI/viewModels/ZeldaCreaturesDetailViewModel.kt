@@ -29,6 +29,7 @@ class ZeldaCreaturesDetailViewModel(selectedCreatureName: Int) : ViewModel() {
         } else {
             creaturesQueries.insert(creatureId.toLong())
         }
+        isLiked.value = !isLiked.value
     }
 
     private fun isFav(creatureId: Int): Boolean {

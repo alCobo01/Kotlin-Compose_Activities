@@ -24,6 +24,7 @@ firebaseCrashlyticsBuildtools = "3.0.3"
 multiplatformSettingsSerialization = "1.3.0"
 uiAndroid = "1.7.8"
 roomCommon = "2.6.1"
+animationGraphicsAndroid = "1.7.8"
 
 [libraries]
 
@@ -70,6 +71,7 @@ ktor-serialization-kotlinx-json = { module = "io.ktor:ktor-serialization-kotlinx
 multiplatform-settings-no-arg = { module = "com.russhwolf:multiplatform-settings-no-arg", version.ref = "multiplatformSettingsSerialization" }
 multiplatform-settings-serialization = { module = "com.russhwolf:multiplatform-settings-serialization", version.ref = "multiplatformSettingsSerialization" }
 sqlite-driver = { module = "app.cash.sqldelight:sqlite-driver", version.ref = "androidDriver" }
+androidx-animation-graphics-android = { group = "androidx.compose.animation", name = "animation-graphics-android", version.ref = "animationGraphicsAndroid" }
 
 [plugins]
 

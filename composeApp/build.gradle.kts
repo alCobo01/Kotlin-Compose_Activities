@@ -124,6 +124,7 @@ dependencies {
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.androidx.ui.android)
     implementation(libs.androidx.room.common)
+    implementation(libs.androidx.animation.graphics.android)
     androidTestImplementation(libs.androidx.uitest.junit4)
     debugImplementation(libs.androidx.uitest.testManifest)
 }
