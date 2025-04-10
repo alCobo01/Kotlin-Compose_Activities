@@ -59,7 +59,7 @@ fun LlistaFaltesScreenArguments(llistaFaltes: List<FaltaEstudiant>){
 
             LazyColumn(
                 verticalArrangement = Arrangement.spacedBy(15.dp),
-                modifier = Modifier.width(500.dp)
+                modifier = Modifier.width(550.dp)
             ) {
                 itemsIndexed(llistaFaltes) {_, falta ->
                     Card(modifier = Modifier.fillMaxWidth()) {
