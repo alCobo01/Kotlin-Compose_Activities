@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -51,7 +52,7 @@ fun ContentLoading() {
 }
 
 @Composable
-fun ThreeRowCard(navigateToDetailScreen: (Int) -> Unit, rowItems: List<Creature>){
+fun ThreeRowCard(navigateToDetailScreen: (Int) -> Unit, rowItems: List<Creature>) {
     Row {
         for (it in rowItems) {
             Card(
@@ -60,26 +61,30 @@ fun ThreeRowCard(navigateToDetailScreen: (Int) -> Unit, rowItems: List<Creature>
                     .weight(1f),
                 onClick = { navigateToDetailScreen(it.id) },
                 colors = CardDefaults.cardColors(
-                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f))
-
+                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)
+                )
             ) {
                 Row(
-                    modifier = Modifier.padding(16.dp).fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    modifier = Modifier
+                        .padding(16.dp)
+                        .fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Text(text = it.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
+                        CardText(it.name)
                     }
+
                     AsyncImage(
                         model = it.image,
                         contentDescription = it.name,
                         modifier = Modifier
-                            .width(210.dp)
-                            .height(210.dp)
+                            .size(210.dp)
                             .clip(shape = RoundedCornerShape(16.dp))
                     )
                 }
@@ -89,7 +94,7 @@ fun ThreeRowCard(navigateToDetailScreen: (Int) -> Unit, rowItems: List<Creature>
 }
 
 @Composable
-fun TwoOrOneRowCard(navigateToDetailScreen: (Int) -> Unit, rowItems: List<Creature>){
+fun TwoOrOneRowCard(navigateToDetailScreen: (Int) -> Unit, rowItems: List<Creature>) {
     Row(
         horizontalArrangement = Arrangement.spacedBy(16.dp, Alignment.CenterHorizontally),
         modifier = Modifier.fillMaxWidth().padding(vertical = 8.dp)
@@ -105,14 +110,16 @@ fun TwoOrOneRowCard(navigateToDetailScreen: (Int) -> Unit, rowItems: List<Creatu
             ) {
                 Row(
                     modifier = Modifier.padding(16.dp).fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .fillMaxHeight(),
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        Text(text = it.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
+                        CardText(it.name)
                     }
                     AsyncImage(
                         model = it.image,
@@ -186,4 +193,16 @@ fun TitleText(text: String){
     )
 
     Spacer(modifier = Modifier.height(16.dp))
+}
+
+@Composable
+fun CardText(text: String){
+    Text(
+        text = text.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() },
+        style = MaterialTheme.typography.bodyLarge.copy(
+            fontSize = 20.sp,
+            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f)
+        ),
+        textAlign = TextAlign.Center
+    )
 }
