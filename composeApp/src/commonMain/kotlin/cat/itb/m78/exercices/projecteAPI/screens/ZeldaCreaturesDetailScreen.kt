@@ -49,7 +49,6 @@ fun ZeldaCreaturesDetailScreenArguments(
 
             Spacer(Modifier.height(16.dp))
 
-
             val painter = rememberAsyncImagePainter(selectedCreature.value.image)
             val state by painter.state.collectAsState()
 
@@ -77,7 +76,12 @@ fun ZeldaCreaturesDetailScreenArguments(
 
             Spacer(Modifier.height(16.dp))
 
-            Button(onClick = {viewModel.changeFavState(selectedCreature.value.id) }) { Text("Add to favorites") }
+            if(viewModel.isLiked.value) {
+                Button(onClick = { viewModel.changeFavState(selectedCreature.value.id) }) { Text("Remove to favorites") }
+            }
+            else{
+                Button(onClick = {viewModel.changeFavState(selectedCreature.value.id) }) { Text("Add to favorites") }
+            }
 
             Button(onClick = navigateToListScreen){ Text("Return to all creatures!") }
         }

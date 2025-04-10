@@ -101,7 +101,6 @@ fun ZeldaCreaturesListScreenArguments(navigateToDetailScreen: (selectedCreatureN
                                                     verticalArrangement = Arrangement.Center
                                                 ) {
                                                     Text(text = it.name.replaceFirstChar { if (it.isLowerCase()) it.titlecase() else it.toString() })
-                                                    Button(onClick = {}){ Icon(imageVector = Icons.Default.Favorite, contentDescription = null) }
                                                 }
                                                 AsyncImage(
                                                     model = it.image,

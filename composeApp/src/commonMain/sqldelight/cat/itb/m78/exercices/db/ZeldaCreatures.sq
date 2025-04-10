@@ -1,4 +1,4 @@
-CREATE TABLE ZeldaCreatures (
+CREATE TABLE IF NOT EXISTS ZeldaCreatures (
     id INTEGER PRIMARY KEY NOT NULL
 );
 

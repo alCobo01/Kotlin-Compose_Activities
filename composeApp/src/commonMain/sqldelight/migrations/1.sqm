@@ -1,3 +1,0 @@
-CREATE TABLE ZeldaCreatures (
-    id INTEGER PRIMARY KEY NOT NULL
-);

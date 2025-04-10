@@ -14,10 +14,12 @@ class ZeldaCreaturesDetailViewModel(selectedCreatureName: Int) : ViewModel() {
 
     private val dummyCreature = Creature(0, "", "", "")
     var selectedCreature = mutableStateOf(dummyCreature)
+    var isLiked = mutableStateOf(false)
 
     init {
         viewModelScope.launch(Dispatchers.Default) {
             selectedCreature.value = ZeldaCreaturesAPI.find(selectedCreatureName)
+            isLiked.value = isFav(selectedCreature.value.id)
         }
     }
 

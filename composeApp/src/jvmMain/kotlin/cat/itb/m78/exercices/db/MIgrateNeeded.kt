@@ -10,10 +10,11 @@ import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
 
 actual fun createDriver(): SqlDriver {
-    val userHome = System.getProperty("user.home")
-    val file = Path(userHome, "myDatabase.db")
+    val dbDir = "D:/Databases"
+    val file = Path(dbDir, "myDatabase.db")
+    println("DEBUG: Using database path: ${file.absolutePathString()}")
     val driver = JdbcSqliteDriver("jdbc:sqlite:${file.absolutePathString()}")
-    migrateIfNeeded(driver, Database.Schema)
+    //migrateIfNeeded(driver, Database.Schema)
     return driver
 }
 

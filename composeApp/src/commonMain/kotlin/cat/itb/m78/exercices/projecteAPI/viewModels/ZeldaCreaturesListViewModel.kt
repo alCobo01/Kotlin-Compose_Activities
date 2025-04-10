@@ -9,12 +9,12 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class ZeldaCreaturesListViewModel : ViewModel() {
-        var creaturesList = mutableStateOf<List<Creature>>(emptyList())
+    var creaturesList = mutableStateOf<List<Creature>>(emptyList())
 
-        init {
-            viewModelScope.launch(Dispatchers.Default) {
-                creaturesList.value = ZeldaCreaturesAPI.list()
-            }
+    init {
+        viewModelScope.launch(Dispatchers.Default) {
+            creaturesList.value = ZeldaCreaturesAPI.list()
         }
+    }
 }
 
