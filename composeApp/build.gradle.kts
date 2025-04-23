@@ -65,7 +65,6 @@ kotlin {
             implementation(libs.ktor.client.cio)
             implementation(libs.ktor.client.content.negotiation.v302)
             implementation(libs.coroutines.extensions)
-            implementation(libs.foundation.desktop)
         }
 
         commonTest.dependencies {

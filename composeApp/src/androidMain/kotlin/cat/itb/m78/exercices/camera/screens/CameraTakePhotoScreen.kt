@@ -4,14 +4,17 @@ import androidx.camera.compose.CameraXViewfinder
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -27,16 +30,14 @@ import com.google.accompanist.permissions.shouldShowRationale
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun CameraTakePhotoScreen(navigateToViewPhotoScreen: () -> Unit){
+fun CameraTakePhotoScreen(navigateToViewPhotoScreen: () -> Unit, viewModel: CameraViewModel){
     val cameraPermissionState = rememberPermissionState(
         android.Manifest.permission.CAMERA
     )
 
-    val viewModel = viewModel { CameraViewModel() }
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val surfaceRequest = viewModel.surferRequest.value
-    val imageCaptureUseCase = viewModel.imageCaptureUseCase
 
     LaunchedEffect(lifecycleOwner) {
         viewModel.bindToCamera(context.applicationContext, lifecycleOwner)
@@ -60,8 +61,15 @@ fun CameraTakePhotoScreen(navigateToViewPhotoScreen: () -> Unit){
                         modifier = Modifier.fillMaxSize()
                     )
                 }
-                Button({ viewModel.takePhoto(context); navigateToViewPhotoScreen() }) {
+
+                Spacer(modifier = Modifier.height(16.dp))
+
+                Button({ viewModel.takePhoto(context) }) {
                     Text("Take Photo")
+                }
+
+                Button({ navigateToViewPhotoScreen() }) {
+                    Text("View photos")
                 }
             }
         }
