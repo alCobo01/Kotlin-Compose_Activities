@@ -12,6 +12,7 @@ plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlinx.serialization)
     id("app.cash.sqldelight") version "2.0.2"
+    id("com.google.android.libraries.mapsplatform.secrets-gradle-plugin")
 }
 
 composeCompiler {
@@ -130,6 +131,7 @@ dependencies {
     implementation(libs.androidx.foundation.layout.android)
     androidTestImplementation(libs.androidx.uitest.junit4)
     debugImplementation(libs.androidx.uitest.testManifest)
+    implementation(libs.maps.compose)
 }
 
 compose.desktop {
@@ -164,6 +166,13 @@ sqldelight {
         }
     }
 }
+
+secrets {
+    propertiesFileName = "secrets.properties"
+
+    defaultPropertiesFileName = "local.defaults.properties"
+}
+
 
 tasks.register<ComposeHotRun>("runHot") {
     mainClass.set("HotrunKt")
