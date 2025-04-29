@@ -87,6 +87,7 @@ kotlin {
             implementation(libs.androidx.camera.compose)
             implementation(libs.androidx.camera.lifecycle)
             implementation(libs.androidx.camera.extensions)
+            implementation(libs.androidx.material.icons.extended)
         }
 
         jvmMain.dependencies {
@@ -132,6 +133,7 @@ dependencies {
     androidTestImplementation(libs.androidx.uitest.junit4)
     debugImplementation(libs.androidx.uitest.testManifest)
     implementation(libs.maps.compose)
+
 }
 
 compose.desktop {
