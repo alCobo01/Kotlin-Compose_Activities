@@ -1,0 +1,23 @@
+CREATE TABLE Monuments (
+    id INTEGER PRIMARY KEY NOT NULL,
+    latitude REAL NOT NULL,
+    longitude REAL NOT NULL,
+    title TEXT NOT NULL,
+    description TEXT,
+    imageUri TEXT
+);
+
+selectAll:
+SELECT * FROM Monuments;
+
+insert:
+INSERT INTO Monuments(
+    latitude,
+    longitude,
+    title,
+    description,
+    imageUri
+) VALUES (?, ?, ?, ?, ?);
+
+delete:
+DELETE FROM Monuments WHERE id = ?;

@@ -88,6 +88,8 @@ kotlin {
             implementation(libs.androidx.camera.lifecycle)
             implementation(libs.androidx.camera.extensions)
             implementation(libs.androidx.material.icons.extended)
+            implementation(libs.androidx.startup.runtime)
+            implementation(libs.androidx.activity)
         }
 
         jvmMain.dependencies {

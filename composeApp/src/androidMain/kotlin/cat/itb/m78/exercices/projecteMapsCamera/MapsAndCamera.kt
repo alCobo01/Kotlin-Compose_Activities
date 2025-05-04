@@ -12,16 +12,17 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.ModalDrawerSheet
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.Text
 import androidx.compose.material3.rememberDrawerState
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.compose.material3.Text
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
+import cat.itb.m78.exercices.projecteMapsCamera.screens.AddMarkerScreen
 import cat.itb.m78.exercices.projecteMapsCamera.screens.MapsScreen
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -31,6 +32,8 @@ object Destination {
     data object MapsScreen
     @Serializable
     data object CameraScreen
+    @Serializable
+    data class AddMarkerScreen(val latitude: Double, val longitude: Double)
     @Serializable
     data object ListSpotsScreen
     @Serializable
@@ -52,6 +55,7 @@ fun MapsAndCamera() {
                     Icon(imageVector = Icons.Filled.TempleBuddhist, contentDescription = null)
                     Text("Monuments", modifier = Modifier.padding(start = 8.dp))
                 }
+
                 HorizontalDivider()
 
                 NavigationDrawerItem(
@@ -91,6 +95,17 @@ fun MapsAndCamera() {
         NavHost(navController = navController, startDestination = Destination.MapsScreen ){
             composable<Destination.MapsScreen> {
                 MapsScreen(drawerState, scope)
+            }
+
+            composable<Destination.AddMarkerScreen> { backStack ->
+                val latitude = backStack.toRoute<Destination.AddMarkerScreen>().latitude
+                val longitude = backStack.toRoute<Destination.AddMarkerScreen>().longitude
+
+                AddMarkerScreen(
+                    navigateToMapScreen = { navController.navigate(Destination.MapsScreen) },
+                    latitude = latitude,
+                    longitude = longitude
+                )
             }
         }
     }

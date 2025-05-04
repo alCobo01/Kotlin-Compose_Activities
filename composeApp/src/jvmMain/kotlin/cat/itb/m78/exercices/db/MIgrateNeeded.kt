@@ -5,15 +5,15 @@ import app.cash.sqldelight.db.SqlCursor
 import app.cash.sqldelight.db.SqlDriver
 import app.cash.sqldelight.db.SqlSchema
 import app.cash.sqldelight.driver.jdbc.sqlite.JdbcSqliteDriver
+import cat.itb.m78.exercices.db.Database
 import kotlin.io.path.Path
 import kotlin.io.path.absolutePathString
-import cat.itb.m78.exercices.db.Database
 
 actual fun createDriver(): SqlDriver {
     val dbDir = System.getProperty("user.home")
     val file = Path(dbDir, "myDatabase.db")
     val driver = JdbcSqliteDriver("jdbc:sqlite:${file.absolutePathString()}")
-    //migrateIfNeeded(driver, Database.Schema)
+    migrateIfNeeded(driver, Database.Schema)
     return driver
 }
 
