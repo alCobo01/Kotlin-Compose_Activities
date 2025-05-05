@@ -2,22 +2,27 @@ package cat.itb.m78.exercices.projecteMapsCamera.screens
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
-import androidx.compose.material3.AlertDialog
-import androidx.compose.material3.Button
 import androidx.compose.material3.CenterAlignedTopAppBar
 import androidx.compose.material3.DrawerState
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -41,21 +46,24 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Composable
-fun MapsScreen(drawerState: DrawerState, scope: CoroutineScope){
+fun MapsScreen(navigateToAddMarkerScreen: (Double, Double) -> Unit, drawerState: DrawerState, scope: CoroutineScope){
     val viewModel = viewModel { MapViewModel() }
 
-    MapsScreenArguments(drawerState, scope, viewModel.monumentsList.value)
+    MapsScreenArguments(navigateToAddMarkerScreen, drawerState, scope, viewModel.monumentsList.value)
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun MapsScreenArguments(drawerState: DrawerState, scope: CoroutineScope, monumentList: List<Monuments>){
+fun MapsScreenArguments(navigateToAddMarkerScreen: (Double, Double) -> Unit,
+    drawerState: DrawerState, scope: CoroutineScope, monumentList: List<Monuments>){
+
     val itbLocation = LatLng(41.4533, 2.18625)
-    val cameraPositionState = rememberCameraPositionState() {
+    val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(itbLocation, 15f)
     }
 
-    var longPressPosition by remember { mutableStateOf<LatLng?>(LatLng(0.0, 0.0)) }
+    val bottomSheetState = rememberModalBottomSheetState()
+    var longPressPosition by remember { mutableStateOf<LatLng?>(null) }
     var showDialog by remember { mutableStateOf(false) }
 
     Scaffold(
@@ -118,33 +126,42 @@ fun MapsScreenArguments(drawerState: DrawerState, scope: CoroutineScope, monumen
             }
 
             if (showDialog && longPressPosition != null) {
-                AlertDialog(
-                    onDismissRequest = { showDialog = false },
-                    title = { Text("Add a new marker") },
-                    text = {
-                        Text("Do you want to add a new marker here?")
-                    },
-                    confirmButton = {
-                        Button(onClick = {
-                            // Llama a callback para crear en BD, etc.
-
-                            showDialog = false
-                            longPressPosition = null
-                        }) {
-                            Text("Yes")
-                        }
-                    },
-                    dismissButton = {
-                        Button(onClick = {
-                            showDialog = false
-                            longPressPosition = null
-                        }) {
-                            Text("No")
+                ModalBottomSheet(
+                    onDismissRequest = { showDialog = false; longPressPosition = null },
+                    sheetState = bottomSheetState
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Text("¿Do you want to add a monument here?")
+                        Spacer(Modifier.height(8.dp))
+                        Row(
+                            horizontalArrangement = Arrangement.Center,
+                            modifier = Modifier.fillMaxWidth()
+                        ) {
+                            TextButton(onClick = {
+                                showDialog = false
+                                longPressPosition = null
+                            }) {
+                                Text("No")
+                            }
+                            TextButton(onClick = {
+                                showDialog = false
+                                navigateToAddMarkerScreen(
+                                    longPressPosition!!.latitude,
+                                    longPressPosition!!.longitude
+                                )
+                                longPressPosition = null
+                            }) {
+                                Text("Yes")
+                            }
                         }
                     }
-                )
+                }
             }
-
         }
     }
 }

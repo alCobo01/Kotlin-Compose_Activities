@@ -3,7 +3,7 @@ CREATE TABLE IF NOT EXISTS Messages (
   text TEXT NOT NULL
 );
 
-CREATE INDEX myTable_full_name ON Messages(text);
+CREATE INDEX IF NOT EXISTS myTable_full_name ON Messages(text);
 
 selectAll:
 SELECT * FROM Messages;

@@ -2,8 +2,6 @@ CREATE TABLE IF NOT EXISTS ZeldaCreatures (
     id INTEGER PRIMARY KEY NOT NULL
 );
 
-CREATE INDEX ZeldaCreatures ON ZeldaCreatures(id);
-
 selectAll:
 SELECT * FROM ZeldaCreatures;
 

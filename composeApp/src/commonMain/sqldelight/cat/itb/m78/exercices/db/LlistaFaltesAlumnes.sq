@@ -1,4 +1,4 @@
-CREATE TABLE LlistaFaltesAlumnes (
+CREATE TABLE IF NOT EXISTS LlistaFaltesAlumnes (
     id INTEGER PRIMARY KEY NOT NULL,
     idEstudiant INTEGER NOT NULL,
     data TEXT NOT NULL

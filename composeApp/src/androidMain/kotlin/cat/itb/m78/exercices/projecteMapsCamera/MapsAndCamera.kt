@@ -33,7 +33,7 @@ object Destination {
     @Serializable
     data object CameraScreen
     @Serializable
-    data class AddMarkerScreen(val latitude: Double, val longitude: Double)
+    data class AddMarkerScreen(val latitude: Float, val longitude: Float)
     @Serializable
     data object ListSpotsScreen
     @Serializable
@@ -94,7 +94,12 @@ fun MapsAndCamera() {
     ){
         NavHost(navController = navController, startDestination = Destination.MapsScreen ){
             composable<Destination.MapsScreen> {
-                MapsScreen(drawerState, scope)
+                MapsScreen(
+                    navigateToAddMarkerScreen = { latitude : Double, longitude : Double ->
+                        navController.navigate(Destination.AddMarkerScreen(latitude.toFloat(), longitude.toFloat()))
+                    },
+                    drawerState = drawerState,
+                    scope = scope)
             }
 
             composable<Destination.AddMarkerScreen> { backStack ->
@@ -103,8 +108,8 @@ fun MapsAndCamera() {
 
                 AddMarkerScreen(
                     navigateToMapScreen = { navController.navigate(Destination.MapsScreen) },
-                    latitude = latitude,
-                    longitude = longitude
+                    latitude = latitude.toDouble(),
+                    longitude = longitude.toDouble()
                 )
             }
         }

@@ -24,7 +24,7 @@
             android:exported="false"
             tools:node="merge">
             <meta-data
-                android:name="package cat.itb.m78.exercices.sqldelight.ContextProvider"
+                android:name="cat.itb.m78.exercices.sqldelight.ContextProvider"
                 android:value="androidx.startup" />
         </provider>
         <meta-data
