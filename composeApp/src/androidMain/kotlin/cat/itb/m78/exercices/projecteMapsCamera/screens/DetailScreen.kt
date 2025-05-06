@@ -1,19 +1,36 @@
 package cat.itb.m78.exercices.projecteMapsCamera.screens
 
-import android.net.Uri
-import android.util.Log
-import androidx.compose.runtime.Composable
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.aspectRatio
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.Bed
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.LocationOn
-import androidx.compose.material.icons.filled.Map
-import androidx.compose.material3.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -22,13 +39,11 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import coil3.compose.AsyncImage
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.LaunchedEffect
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import cat.itb.m78.exercices.db.Monuments
 import cat.itb.m78.exercices.projecteMapsCamera.viewModels.DetailViewModel
+import coil3.compose.AsyncImage
 
 @Composable
 fun DetailScreen(monumentId: Int, navController: NavController){
@@ -43,12 +58,6 @@ fun DetailScreenArguments(
     monument: MutableState<Monuments>,
     navController: NavController
 ) {
-    // Log the image URI to help debug
-    LaunchedEffect(monument.value) {
-        Log.d("DetailScreen", "Loading image URI: ${monument.value.imageUri}")
-        Log.d("DetailScreen", "Is URI valid: ${isValidUri(monument.value.imageUri)}")
-    }
-    
     Scaffold(
         containerColor = Color.Transparent,
         topBar = {
@@ -57,7 +66,7 @@ fun DetailScreenArguments(
                 navigationIcon = {
                     IconButton(onClick = { navController.popBackStack() }) {
                         Icon(
-                            imageVector = Icons.Default.ArrowBack,
+                            imageVector = Icons.AutoMirrored.Filled.ArrowBack,
                             contentDescription = "Back",
                             tint = Color.White
                         )
@@ -75,10 +84,7 @@ fun DetailScreenArguments(
                     model = monument.value.imageUri,
                     contentDescription = monument.value.title,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier.fillMaxSize(),
-                    onLoading = { Log.d("DetailScreen", "Image loading...") },
-                    onSuccess = { Log.d("DetailScreen", "Image loaded successfully") },
-                    onError = { Log.e("DetailScreen", "Error loading image: $it") }
+                    modifier = Modifier.fillMaxSize()
                 )
                 Box(
                     modifier = Modifier
@@ -111,7 +117,7 @@ fun DetailScreenArguments(
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(16.dp)
-                            .aspectRatio(1f), // Square aspect ratio
+                            .aspectRatio(1f),
                         shape = RoundedCornerShape(16.dp),
                         colors = CardDefaults.cardColors(
                             containerColor = MaterialTheme.colorScheme.surface
@@ -125,13 +131,11 @@ fun DetailScreenArguments(
                             AsyncImage(
                                 model = monument.value.imageUri,
                                 contentDescription = monument.value.title,
-                                contentScale = ContentScale.Fit, // Use Fit to show entire image
+                                contentScale = ContentScale.Crop,
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .padding(4.dp),
-                                onLoading = { Log.d("DetailScreen", "Card image loading...") },
-                                onSuccess = { Log.d("DetailScreen", "Card image loaded successfully") },
-                                onError = { Log.e("DetailScreen", "Error loading card image: $it") }
+                                    .padding(6.dp)
+                                    .clip(shape = RoundedCornerShape(16.dp))
                             )
                         }
                     }
@@ -202,25 +206,22 @@ fun DetailScreenArguments(
 
                             Spacer(modifier = Modifier.width(8.dp))
 
-                            Text(
-                                text = "Lat: ${monument.value.latitude}, Long: ${monument.value.longitude}",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = MaterialTheme.colorScheme.onSurfaceVariant
-                            )
+                            Column {
+                                Text(
+                                    text = "Lat: ${monument.value.latitude}",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                                Text(
+                                    text = "Long: ${monument.value.longitude}",
+                                    style = MaterialTheme.typography.bodyMedium,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
+                                )
+                            }
                         }
                     }
                 }
             }
         }
-    }
-}
-
-// Helper function to validate URIs
-private fun isValidUri(uriString: String?): Boolean {
-    return try {
-        uriString?.let { Uri.parse(it) != null } ?: false
-    } catch (e: Exception) {
-        Log.e("DetailScreen", "Invalid URI format: $uriString", e)
-        false
     }
 }

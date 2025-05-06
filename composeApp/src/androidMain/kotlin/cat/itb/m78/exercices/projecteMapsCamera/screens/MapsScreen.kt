@@ -36,10 +36,12 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cat.itb.m78.exercices.db.Monuments
 import cat.itb.m78.exercices.projecteMapsCamera.viewModels.MapViewModel
+import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.AdvancedMarker
 import com.google.maps.android.compose.GoogleMap
+import com.google.maps.android.compose.Marker
 import com.google.maps.android.compose.MarkerState
 import com.google.maps.android.compose.rememberCameraPositionState
 import kotlinx.coroutines.CoroutineScope
@@ -106,7 +108,7 @@ fun MapsScreenArguments(navigateToAddMarkerScreen: (Double, Double) -> Unit,
                     showDialog = true
                 }
             ) {
-                //Marcadors guardats a la BBDD
+                // Saved markers from DB
                 monumentList.forEach { monument ->
                     AdvancedMarker(
                         state = MarkerState(LatLng(monument.latitude, monument.longitude)),
@@ -115,12 +117,13 @@ fun MapsScreenArguments(navigateToAddMarkerScreen: (Double, Double) -> Unit,
                     )
                 }
 
-                //Marcador que surt al pulsar
+                // Marker shown on long press
                 longPressPosition?.let { pos ->
-                    AdvancedMarker(
+                    Marker(
                         state = MarkerState(pos),
                         title = "New monument",
-                        snippet = "Touch to add"
+                        snippet = "Touch to add",
+                        icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)
                     )
                 }
             }
