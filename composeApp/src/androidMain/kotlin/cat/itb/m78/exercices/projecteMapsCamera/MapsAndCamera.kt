@@ -55,6 +55,7 @@ fun MapsAndCamera() {
 
     ModalNavigationDrawer(
         drawerState = drawerState,
+        gesturesEnabled = false,
         drawerContent = {
                 ModalDrawerSheet {
                 Row(modifier = Modifier.padding(16.dp)) {

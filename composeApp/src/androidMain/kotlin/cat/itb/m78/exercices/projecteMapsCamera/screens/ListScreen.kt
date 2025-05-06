@@ -3,10 +3,13 @@ package cat.itb.m78.exercices.projecteMapsCamera.screens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Menu
@@ -24,6 +27,7 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import cat.itb.m78.exercices.projecteMapsCamera.viewModels.MapViewModel
@@ -75,6 +79,8 @@ fun ListScreenArguments(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.padding(innerPadding).fillMaxSize()
         ) {
+            Spacer(modifier = Modifier.height(16.dp))
+
             LazyColumn {
                 if (monumentList.isEmpty()){
                     item {
@@ -84,73 +90,62 @@ fun ListScreenArguments(
                             modifier = Modifier.fillMaxSize()
                         ) {
                             Text(
-                                text = "No creatures found!",
+                                text = "No saved monuments found!",
                                 style = MaterialTheme.typography.headlineMedium
                             )
                         }
                     }
                 }
 
-                val rows = monumentList.chunked(2)
-                rows.forEach { rowItems ->
-                    if (rowItems.size == 2) {
-                        item {
-                            Row {
-                                for (it in rowItems) {
-                                    Card(
-                                        modifier = Modifier
-                                            .padding(16.dp)
-                                            .weight(1f),
-                                        onClick = { navigateToDetailScreen(it.id.toInt()) },
-                                        colors = CardDefaults.cardColors(
-                                            containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)
-                                        )
-                                    ) {
-                                        Row(
-                                            modifier = Modifier
-                                                .padding(16.dp)
-                                                .fillMaxWidth(),
-                                            verticalAlignment = Alignment.CenterVertically
-                                        ) {
-                                            Column(
-                                                modifier = Modifier
-                                                    .weight(1f)
-                                                    .fillMaxHeight(),
-                                                horizontalAlignment = Alignment.CenterHorizontally,
-                                                verticalArrangement = Arrangement.Center
-                                            ) {
-                                                Text(it.title)
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    } else if (rowItems.size == 1) {
-                        item {
-                            Card(
+                monumentList.forEach {
+                    item {
+                        Card(
+                            modifier = Modifier
+                                .padding(horizontal = 16.dp, vertical = 8.dp)
+                                .fillMaxWidth(),
+                            onClick = { navigateToDetailScreen(it.id.toInt()) },
+                            colors = CardDefaults.cardColors(
+                                containerColor = MaterialTheme.colorScheme.surfaceContainer,
+                            ),
+                            elevation = CardDefaults.cardElevation(
+                                defaultElevation = 3.dp
+                            ),
+                            shape = MaterialTheme.shapes.medium
+                        ) {
+                            Row(
                                 modifier = Modifier
                                     .padding(16.dp)
                                     .fillMaxWidth(),
-                                onClick = { navigateToDetailScreen(rowItems[0].id.toInt()) },
-                                colors = CardDefaults.cardColors(
-                                    containerColor = MaterialTheme.colorScheme.surface.copy(alpha = 0.5f)
-                                )
+                                verticalAlignment = Alignment.CenterVertically
                             ) {
+
+                                Spacer(modifier = Modifier.width(12.dp))
+
                                 Row(
-                                    modifier = Modifier
-                                        .padding(16.dp)
-                                        .fillMaxWidth(),
+                                    modifier = Modifier.weight(1f),
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Column(
-                                        modifier = Modifier
-                                            .weight(1f)
-                                            .fillMaxHeight(),
-                                        horizontalAlignment = Alignment.CenterHorizontally,
-                                        verticalArrangement = Arrangement.Center
-                                    ) {
-                                        Text(rowItems[0].title)
+                                    Text(
+                                        text = it.title,
+                                        style = MaterialTheme.typography.titleMedium.copy(
+                                            fontWeight = FontWeight.Bold
+                                        ),
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                        modifier = Modifier.weight(0.4f)
+                                    )
+
+                                    if (it.description != null) {
+                                        Text(
+                                            text = it.description,
+                                            style = MaterialTheme.typography.bodyMedium,
+                                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f),
+                                            maxLines = 1,
+                                            overflow = TextOverflow.Ellipsis,
+                                            modifier = Modifier
+                                                .padding(start = 8.dp)
+                                                .weight(0.6f)
+                                        )
                                     }
                                 }
                             }

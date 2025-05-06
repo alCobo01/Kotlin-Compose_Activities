@@ -10,6 +10,9 @@ CREATE TABLE IF NOT EXISTS Monuments (
 selectAll:
 SELECT * FROM Monuments;
 
+selectById:
+SELECT * FROM Monuments WHERE id = ?;
+
 insert:
 INSERT INTO Monuments(
     latitude,

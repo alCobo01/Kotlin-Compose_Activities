@@ -1,3 +1,4 @@
+
 package cat.itb.m78.exercices.projecteMapsCamera.viewModels
 
 import android.content.ContentValues
