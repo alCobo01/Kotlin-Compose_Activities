@@ -26,22 +26,26 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import cat.itb.m78.exercices.camera.screens.CameraTakePhotoScreen
 import cat.itb.m78.exercices.projecteMapsCamera.DTOs.InsertMarker
 import cat.itb.m78.exercices.projecteMapsCamera.viewModels.AddMarkerViewModel
 import cat.itb.m78.exercices.projecteMapsCamera.viewModels.CameraViewModel
 import kotlin.reflect.KFunction1
 
 @Composable
-fun AddMarkerScreen(navigateToMapScreen : () -> Unit, latitude : Double, longitude : Double){
+fun AddMarkerScreen(
+    navigateToMapScreen : () -> Unit,
+    navigateToCameraScreen : () -> Unit,
+    latitude : Double,
+    longitude : Double){
     val viewModel = viewModel { AddMarkerViewModel() }
 
-    AddMarkerScreenArguments(navigateToMapScreen, viewModel :: addMarker, latitude, longitude)
+    AddMarkerScreenArguments(navigateToMapScreen, navigateToCameraScreen, viewModel :: addMarker, latitude, longitude)
 }
 
 @Composable
 fun AddMarkerScreenArguments(
         navigateToMapScreen: () -> Unit,
+        navigateToCameraScreen: () -> Unit,
         addMarker: KFunction1<InsertMarker, Unit>,
         latitude: Double,
         longitude: Double)
@@ -67,17 +71,10 @@ fun AddMarkerScreenArguments(
         }
     }
 
-    // 4) Controla cuándo mostramos la “pantalla” de cámara
     var showCamera by remember { mutableStateOf(false) }
 
     if (showCamera) {
-        CameraTakePhotoScreen(
-            navigateToViewPhotoScreen = {
-                showCamera = false
-            },
-            viewModel = cameraVm
-        )
-        return
+        navigateToCameraScreen()
     }
 
     Column(

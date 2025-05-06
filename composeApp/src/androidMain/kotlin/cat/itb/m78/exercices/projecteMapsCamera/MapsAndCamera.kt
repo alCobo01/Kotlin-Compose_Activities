@@ -23,6 +23,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import cat.itb.m78.exercices.projecteMapsCamera.screens.AddMarkerScreen
+import cat.itb.m78.exercices.projecteMapsCamera.screens.CameraScreen
 import cat.itb.m78.exercices.projecteMapsCamera.screens.MapsScreen
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
@@ -31,7 +32,7 @@ object Destination {
     @Serializable
     data object MapsScreen
     @Serializable
-    data object CameraScreen
+    data class CameraScreen(val latitude: Float, val longitude: Float)
     @Serializable
     data class AddMarkerScreen(val latitude: Float, val longitude: Float)
     @Serializable
@@ -108,6 +109,21 @@ fun MapsAndCamera() {
 
                 AddMarkerScreen(
                     navigateToMapScreen = { navController.navigate(Destination.MapsScreen) },
+                    navigateToCameraScreen = {
+                        navController.navigate(Destination.CameraScreen(latitude, longitude))
+                    },
+                    latitude = latitude.toDouble(),
+                    longitude = longitude.toDouble()
+                )
+            }
+
+            composable<Destination.CameraScreen> { backStack ->
+                val latitude = backStack.toRoute<Destination.CameraScreen>().latitude
+                val longitude = backStack.toRoute<Destination.CameraScreen>().longitude
+
+                CameraScreen(
+                    navigateToAddMarker = { },
+                    navController = navController,
                     latitude = latitude.toDouble(),
                     longitude = longitude.toDouble()
                 )

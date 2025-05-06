@@ -1,4 +1,4 @@
-package cat.itb.m78.exercices.camera.screens
+package cat.itb.m78.exercices.projecteMapsCamera.screens
 
 import androidx.camera.compose.CameraXViewfinder
 import androidx.compose.foundation.layout.Arrangement
@@ -20,15 +20,26 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
-import cat.itb.m78.exercices.camera.CameraViewModel
+import androidx.navigation.NavController
+import cat.itb.m78.exercices.projecteMapsCamera.viewModels.CameraViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
+import kotlinx.coroutines.delay
+
+@Composable
+fun CameraScreen(navigateToAddMarker: () -> Unit, navController: NavController,
+    latitude: Double, longitude: Double) {
+
+    val viewModel = CameraViewModel()
+    CameraArgumentsScreen(navigateToAddMarker, viewModel, navController)
+}
+
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun CameraTakePhotoScreen(navigateToViewPhotoScreen: () -> Unit, viewModel: CameraViewModel){
+fun CameraArgumentsScreen(navigateToAddMarker: () -> Unit, viewModel: CameraViewModel, navController: NavController){
     val cameraPermissionState = rememberPermissionState(
         android.Manifest.permission.CAMERA
     )
@@ -36,9 +47,17 @@ fun CameraTakePhotoScreen(navigateToViewPhotoScreen: () -> Unit, viewModel: Came
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val surfaceRequest = viewModel.surferRequest.value
+    val savedUri = viewModel.savedPhotoUri.value
 
     LaunchedEffect(lifecycleOwner) {
         viewModel.bindToCamera(context.applicationContext, lifecycleOwner)
+    }
+
+    LaunchedEffect(savedUri) {
+        if (savedUri != null) {
+            delay(500)
+            navController.popBackStack()
+        }
     }
 
     if (cameraPermissionState.status.isGranted) {
@@ -53,7 +72,7 @@ fun CameraTakePhotoScreen(navigateToViewPhotoScreen: () -> Unit, viewModel: Came
                         .width(300.dp)
                         .aspectRatio(1f)
                         .clip(shape = RoundedCornerShape(16.dp))
-                    ) {
+                ) {
                     CameraXViewfinder(
                         surfaceRequest = request,
                         modifier = Modifier.fillMaxSize()
@@ -64,10 +83,6 @@ fun CameraTakePhotoScreen(navigateToViewPhotoScreen: () -> Unit, viewModel: Came
 
                 Button({ viewModel.takePhoto(context) }) {
                     Text("Take Photo")
-                }
-
-                Button({ navigateToViewPhotoScreen() }) {
-                    Text("View photos")
                 }
             }
         }

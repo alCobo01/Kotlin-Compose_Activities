@@ -40,44 +40,27 @@ class CameraViewModel : ViewModel(){
     val savedPhotoUri: State<Uri?> = _savedPhotoUri
 
     fun takePhoto(context: Context) {
-        // 1) Generamos un nombre único
         val name = "photo_${System.currentTimeMillis()}.jpg"
 
-        // 2) Creamos los ContentValues para MediaStore
         val contentValues = ContentValues().apply {
             put(MediaStore.MediaColumns.DISPLAY_NAME, name)
             put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-                // Carpeta dentro de Pictures/
-                put(
-                    MediaStore.Images.Media.RELATIVE_PATH,
-                    "Pictures/CameraX-Image"
-                )
-                // Marcamos como pendiente (opcional, pero recomendado)
+                put(MediaStore.Images.Media.RELATIVE_PATH, "Pictures/Monuments")
                 put(MediaStore.Images.Media.IS_PENDING, 1)
             }
         }
 
-        // 3) Insertamos en MediaStore para obtener la URI de destino
         val resolver = context.contentResolver
-        val collection =
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
-                MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
-            else
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI
+        val collection = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q)
+            MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+        else
+            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
 
-        val photoUri: Uri? = resolver.insert(collection, contentValues)
-        if (photoUri == null) {
-            Log.e("CameraViewModel", "No se pudo crear URI para la foto")
-            return
-        }
-
-        // 4) Creamos las opciones de salida apuntando a esa URI
         val outputOptions = ImageCapture.OutputFileOptions
-            .Builder(resolver, photoUri, contentValues)
+            .Builder(resolver, collection, contentValues)
             .build()
 
-        // 5) Disparamos la captura
         imageCaptureUseCase.takePicture(
             outputOptions,
             ContextCompat.getMainExecutor(context),
@@ -87,14 +70,13 @@ class CameraViewModel : ViewModel(){
                         "Error al tomar foto: ${exc.message}", exc)
                 }
                 override fun onImageSaved(output: ImageCapture.OutputFileResults) {
-                    // 6) Ya guardada la foto, desmarcamos el IS_PENDING
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
                         contentValues.clear()
                         contentValues.put(MediaStore.Images.Media.IS_PENDING, 0)
-                        resolver.update(photoUri, contentValues, null, null)
+                        output.savedUri?.let { resolver.update(it, contentValues, null, null) }
                     }
-                    Log.d("CameraViewModel", "Foto guardada: $photoUri")
-                    _savedPhotoUri.value = photoUri
+                    Log.d("CameraViewModel", "Foto guardada: ${output.savedUri}")
+                    _savedPhotoUri.value = output.savedUri
                 }
             }
         )
