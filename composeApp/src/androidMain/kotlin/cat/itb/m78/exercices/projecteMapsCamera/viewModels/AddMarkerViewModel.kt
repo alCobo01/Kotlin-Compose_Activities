@@ -12,14 +12,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.switchMap
 import cat.itb.m78.exercices.projecteMapsCamera.DTOs.InsertMarker
-
-const val PHOTO_URI_KEY = "photoUri"
+import cat.itb.m78.exercices.projecteMapsCamera.PHOTO_URI_KEY
 
 class AddMarkerViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(){
-    var showDialog by mutableStateOf(false)
-    var showTitleErrorDialog by mutableStateOf(false)
-    val photoUri = savedStateHandle.getStateFlow<String?>(PHOTO_URI_KEY, null)
-
+    //Database
     private val dbQueries = database.monumentsQueries
 
     fun addMarker(marker : InsertMarker){
@@ -32,6 +28,21 @@ class AddMarkerViewModel(private val savedStateHandle: SavedStateHandle) : ViewM
         )
     }
 
+    //Photo URI
+    var showDialog by mutableStateOf(false)
+    var showTitleErrorDialog by mutableStateOf(false)
+    val photoUri = savedStateHandle.getStateFlow<String?>(PHOTO_URI_KEY, null)
+
+    //State between screens
+    private var tempMarker: InsertMarker? = null
+
+    fun saveMarkerState(marker: InsertMarker) {
+        tempMarker = marker
+    }
+
+    fun getMarkerState(): InsertMarker? {
+        return tempMarker
+    }
 
 
 }

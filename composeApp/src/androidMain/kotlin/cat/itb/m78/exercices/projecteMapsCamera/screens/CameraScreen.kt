@@ -21,8 +21,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
+import cat.itb.m78.exercices.projecteMapsCamera.PHOTO_URI_KEY
 import cat.itb.m78.exercices.projecteMapsCamera.viewModels.CameraViewModel
-import cat.itb.m78.exercices.projecteMapsCamera.viewModels.PHOTO_URI_KEY
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState

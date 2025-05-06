@@ -1,5 +1,6 @@
 package cat.itb.m78.exercices.projecteMapsCamera.screens
 
+import android.net.Uri
 import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.PickVisualMediaRequest
@@ -31,7 +32,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import cat.itb.m78.exercices.projecteMapsCamera.DTOs.InsertMarker
 import cat.itb.m78.exercices.projecteMapsCamera.viewModels.AddMarkerViewModel
 import cat.itb.m78.exercices.projecteMapsCamera.viewModels.CameraViewModel
-import coil3.compose.AsyncImage
 import com.google.android.gms.maps.model.LatLng
 import kotlin.reflect.KFunction1
 
@@ -42,38 +42,49 @@ fun AddMarkerScreen(
     navigateToCameraScreen: () -> Unit,
     latLng: LatLng
 ){
-    val viewModel = viewModel { AddMarkerViewModel(savedStateHandle) }
-    val photoUri = viewModel.photoUri.collectAsState().value
-    AddMarkerScreenArguments(navigateToMapScreen, navigateToCameraScreen, viewModel :: addMarker, latLng, photoUri)
+    val addMarkerViewModel = viewModel { AddMarkerViewModel(savedStateHandle) }
+    val photoUri = addMarkerViewModel.photoUri.collectAsState().value
+
+    val initialMarker = addMarkerViewModel.getMarkerState() ?:
+        InsertMarker(latLng.latitude, latLng.longitude, "", "", photoUri ?: "")
+
+    val cameraViewModel = viewModel { CameraViewModel() }
+    val savedUri by cameraViewModel.savedPhotoUri
+
+    AddMarkerScreenArguments(navigateToMapScreen, navigateToCameraScreen,
+        addMarkerViewModel :: addMarker, initialMarker, savedUri) { marker ->
+        addMarkerViewModel.saveMarkerState(marker)
+
+    }
 }
 
 @Composable
 fun AddMarkerScreenArguments(
-        navigateToMapScreen: () -> Unit,
-        navigateToCameraScreen: () -> Unit,
-        addMarker: KFunction1<InsertMarker, Unit>,
-        latLng: LatLng,
-        photoUri: String?)
+    navigateToMapScreen: () -> Unit,
+    navigateToCameraScreen: () -> Unit,
+    addMarker: KFunction1<InsertMarker, Unit>,
+    initialMarker: InsertMarker,
+    savedUri: Uri?,
+    onMarkerChange: (InsertMarker) -> Unit
+)
 {
-    var marker by remember { mutableStateOf(InsertMarker(latLng.latitude, latLng.longitude, "", "", "")) }
+    var marker by remember { mutableStateOf(initialMarker) }
 
     var showDialog by remember { mutableStateOf(false) }
+    var showCamera by remember { mutableStateOf(false) }
     var showTitleErrorDialog by remember { mutableStateOf(false) }
 
+    //Save photo URI from gallery when launched
     val pickMedia = rememberLauncherForActivityResult(ActivityResultContracts.PickVisualMedia()) { uri ->
         if (uri != null) {
-            marker.imageUri = uri.toString()
+            marker = marker.copy(imageUri = uri.toString())
         } else {
             Log.d("PhotoPicker", "No media selected")
         }
     }
 
-    val cameraVm = viewModel { CameraViewModel() }
-
-    val savedUri by cameraVm.savedPhotoUri
-
-    if (photoUri != null) {
-        marker.imageUri = photoUri
+    LaunchedEffect(marker){
+        onMarkerChange(marker)
     }
 
     LaunchedEffect(savedUri) {
@@ -81,8 +92,6 @@ fun AddMarkerScreenArguments(
             marker = marker.copy(imageUri = it.toString())
         }
     }
-
-    var showCamera by remember { mutableStateOf(false) }
 
     LaunchedEffect(showCamera) {
         if (showCamera) {

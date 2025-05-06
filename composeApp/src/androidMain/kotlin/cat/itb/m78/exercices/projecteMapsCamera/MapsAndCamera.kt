@@ -24,10 +24,14 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import cat.itb.m78.exercices.projecteMapsCamera.screens.AddMarkerScreen
 import cat.itb.m78.exercices.projecteMapsCamera.screens.CameraScreen
+import cat.itb.m78.exercices.projecteMapsCamera.screens.ListScreen
 import cat.itb.m78.exercices.projecteMapsCamera.screens.MapsScreen
+import cat.itb.m78.exercices.projecteMapsCamera.screens.DetailScreen
 import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
+
+const val PHOTO_URI_KEY = "photoUri"
 
 object Destination {
     @Serializable
@@ -37,9 +41,9 @@ object Destination {
     @Serializable
     data class AddMarkerScreen(val latitude: Float, val longitude: Float)
     @Serializable
-    data object ListSpotsScreen
+    data object ListScreen
     @Serializable
-    data class DetailSpotScreen(val id: Int)
+    data class DetailScreen(val id: Int)
 }
 
 @Composable
@@ -85,7 +89,7 @@ fun MapsAndCamera() {
                     },
                     selected = false,
                     onClick = {
-                        navController.navigate(Destination.MapsScreen)
+                        navController.navigate(Destination.ListScreen)
                         scope.launch {
                             drawerState.close()
                         }
@@ -102,6 +106,25 @@ fun MapsAndCamera() {
                     },
                     drawerState = drawerState,
                     scope = scope)
+            }
+
+            composable<Destination.ListScreen> {
+                ListScreen(
+                    navigateToDetailScreen = { monumentId: Int ->
+                        navController.navigate(Destination.DetailScreen(id = monumentId))
+                    },
+                    drawerState = drawerState,
+                    scope = scope
+                )
+            }
+
+            composable<Destination.DetailScreen> { backStack ->
+                val monumentId = backStack.toRoute<Destination.DetailScreen>().id
+
+                DetailScreen(
+                    monumentId = monumentId,
+                    navController = navController
+                )
             }
 
             composable<Destination.AddMarkerScreen> { backStack ->
