@@ -25,6 +25,7 @@ import androidx.navigation.toRoute
 import cat.itb.m78.exercices.projecteMapsCamera.screens.AddMarkerScreen
 import cat.itb.m78.exercices.projecteMapsCamera.screens.CameraScreen
 import cat.itb.m78.exercices.projecteMapsCamera.screens.MapsScreen
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.launch
 import kotlinx.serialization.Serializable
 
@@ -104,16 +105,19 @@ fun MapsAndCamera() {
             }
 
             composable<Destination.AddMarkerScreen> { backStack ->
+                val savedStateHandle = backStack.savedStateHandle
                 val latitude = backStack.toRoute<Destination.AddMarkerScreen>().latitude
                 val longitude = backStack.toRoute<Destination.AddMarkerScreen>().longitude
 
+                val latLng = LatLng(latitude.toDouble(), longitude.toDouble())
+
                 AddMarkerScreen(
+                    savedStateHandle,
                     navigateToMapScreen = { navController.navigate(Destination.MapsScreen) },
                     navigateToCameraScreen = {
                         navController.navigate(Destination.CameraScreen(latitude, longitude))
                     },
-                    latitude = latitude.toDouble(),
-                    longitude = longitude.toDouble()
+                    latLng = latLng
                 )
             }
 
@@ -122,10 +126,9 @@ fun MapsAndCamera() {
                 val longitude = backStack.toRoute<Destination.CameraScreen>().longitude
 
                 CameraScreen(
-                    navigateToAddMarker = { },
+                    navigateToAddMarkerScreen = { },
                     navController = navController,
-                    latitude = latitude.toDouble(),
-                    longitude = longitude.toDouble()
+                    latLng = LatLng(latitude.toDouble(), longitude.toDouble())
                 )
             }
         }

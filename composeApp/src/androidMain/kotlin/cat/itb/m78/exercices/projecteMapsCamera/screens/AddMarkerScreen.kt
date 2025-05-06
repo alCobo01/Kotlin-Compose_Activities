@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -25,21 +26,25 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import cat.itb.m78.exercices.projecteMapsCamera.DTOs.InsertMarker
 import cat.itb.m78.exercices.projecteMapsCamera.viewModels.AddMarkerViewModel
 import cat.itb.m78.exercices.projecteMapsCamera.viewModels.CameraViewModel
+import coil3.compose.AsyncImage
+import com.google.android.gms.maps.model.LatLng
 import kotlin.reflect.KFunction1
 
 @Composable
 fun AddMarkerScreen(
-    navigateToMapScreen : () -> Unit,
-    navigateToCameraScreen : () -> Unit,
-    latitude : Double,
-    longitude : Double){
-    val viewModel = viewModel { AddMarkerViewModel() }
-
-    AddMarkerScreenArguments(navigateToMapScreen, navigateToCameraScreen, viewModel :: addMarker, latitude, longitude)
+    savedStateHandle: SavedStateHandle,
+    navigateToMapScreen: () -> Unit,
+    navigateToCameraScreen: () -> Unit,
+    latLng: LatLng
+){
+    val viewModel = viewModel { AddMarkerViewModel(savedStateHandle) }
+    val photoUri = viewModel.photoUri.collectAsState().value
+    AddMarkerScreenArguments(navigateToMapScreen, navigateToCameraScreen, viewModel :: addMarker, latLng, photoUri)
 }
 
 @Composable
@@ -47,10 +52,11 @@ fun AddMarkerScreenArguments(
         navigateToMapScreen: () -> Unit,
         navigateToCameraScreen: () -> Unit,
         addMarker: KFunction1<InsertMarker, Unit>,
-        latitude: Double,
-        longitude: Double)
+        latLng: LatLng,
+        photoUri: String?)
 {
-    var marker by remember { mutableStateOf(InsertMarker(latitude, longitude, "", "", "")) }
+    var marker by remember { mutableStateOf(InsertMarker(latLng.latitude, latLng.longitude, "", "", "")) }
+
     var showDialog by remember { mutableStateOf(false) }
     var showTitleErrorDialog by remember { mutableStateOf(false) }
 
@@ -65,6 +71,11 @@ fun AddMarkerScreenArguments(
     val cameraVm = viewModel { CameraViewModel() }
 
     val savedUri by cameraVm.savedPhotoUri
+
+    if (photoUri != null) {
+        marker.imageUri = photoUri
+    }
+
     LaunchedEffect(savedUri) {
         savedUri?.let {
             marker = marker.copy(imageUri = it.toString())
@@ -73,15 +84,21 @@ fun AddMarkerScreenArguments(
 
     var showCamera by remember { mutableStateOf(false) }
 
-    if (showCamera) {
-        navigateToCameraScreen()
+    LaunchedEffect(showCamera) {
+        if (showCamera) {
+            navigateToCameraScreen()
+            showCamera = false
+        }
     }
+
+    Log.d("AddMarkerScreen", "Marker: $marker")
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
         modifier = Modifier.fillMaxSize()
     ) {
+
         TextField(
             value = marker.title,
             onValueChange = { marker = marker.copy(title = it) },

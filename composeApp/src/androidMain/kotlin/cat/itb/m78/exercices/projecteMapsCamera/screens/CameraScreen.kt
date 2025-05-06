@@ -22,24 +22,24 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.navigation.NavController
 import cat.itb.m78.exercices.projecteMapsCamera.viewModels.CameraViewModel
+import cat.itb.m78.exercices.projecteMapsCamera.viewModels.PHOTO_URI_KEY
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
 import com.google.accompanist.permissions.shouldShowRationale
+import com.google.android.gms.maps.model.LatLng
 import kotlinx.coroutines.delay
 
 @Composable
-fun CameraScreen(navigateToAddMarker: () -> Unit, navController: NavController,
-    latitude: Double, longitude: Double) {
-
+fun CameraScreen(navigateToAddMarkerScreen: () -> Unit, navController: NavController, latLng: LatLng) {
     val viewModel = CameraViewModel()
-    CameraArgumentsScreen(navigateToAddMarker, viewModel, navController)
+    CameraArgumentsScreen(viewModel, navController)
 }
 
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun CameraArgumentsScreen(navigateToAddMarker: () -> Unit, viewModel: CameraViewModel, navController: NavController){
+fun CameraArgumentsScreen(viewModel: CameraViewModel, navController: NavController){
     val cameraPermissionState = rememberPermissionState(
         android.Manifest.permission.CAMERA
     )
@@ -55,7 +55,9 @@ fun CameraArgumentsScreen(navigateToAddMarker: () -> Unit, viewModel: CameraView
 
     LaunchedEffect(savedUri) {
         if (savedUri != null) {
-            delay(500)
+            navController.previousBackStackEntry
+                ?.savedStateHandle
+                ?.set(PHOTO_URI_KEY, savedUri.toString())
             navController.popBackStack()
         }
     }
