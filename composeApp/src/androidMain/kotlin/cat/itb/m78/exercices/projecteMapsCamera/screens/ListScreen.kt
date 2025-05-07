@@ -82,16 +82,28 @@ fun ListScreenArguments(
             Spacer(modifier = Modifier.height(16.dp))
 
             LazyColumn {
-                if (monumentList.isEmpty()){
+                if (monumentList.isEmpty()) {
                     item {
                         Column(
                             horizontalAlignment = Alignment.CenterHorizontally,
                             verticalArrangement = Arrangement.Center,
-                            modifier = Modifier.fillMaxSize()
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .fillMaxHeight(0.8f)
+                                .padding(16.dp)
                         ) {
                             Text(
-                                text = "No saved monuments found!",
-                                style = MaterialTheme.typography.headlineMedium
+                                text = "No monuments found",
+                                style = MaterialTheme.typography.headlineSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = MaterialTheme.colorScheme.primary
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = "Add your first monument from the map screen",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                                textAlign = androidx.compose.ui.text.style.TextAlign.Center
                             )
                         }
                     }
