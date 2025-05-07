@@ -17,4 +17,11 @@ class MapViewModel : ViewModel() {
             monumentsList.value = dbQueries.selectAll().executeAsList()
         }
     }
+
+    fun deleteMonument(monumentId: Int) {
+        viewModelScope.launch {
+            dbQueries.delete(monumentId.toLong())
+            monumentsList.value = dbQueries.selectAll().executeAsList()
+        }
+    }
 }

@@ -108,7 +108,7 @@ fun MapsScreenArguments(navigateToAddMarkerScreen: (Double, Double) -> Unit,
                     showDialog = true
                 }
             ) {
-                // Saved markers from DB
+                //Marcadors guardats a la BBDD
                 monumentList.forEach { monument ->
                     AdvancedMarker(
                         state = MarkerState(LatLng(monument.latitude, monument.longitude)),
@@ -117,7 +117,7 @@ fun MapsScreenArguments(navigateToAddMarkerScreen: (Double, Double) -> Unit,
                     )
                 }
 
-                // Marker shown on long press
+                //Marcador que surt al pulsar
                 longPressPosition?.let { pos ->
                     Marker(
                         state = MarkerState(pos),
