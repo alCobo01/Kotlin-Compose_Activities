@@ -210,7 +210,6 @@ fun ListScreenArguments(
                                         tint = MaterialTheme.colorScheme.error
                                     )
                                 }
-
                             }
                         }
                     }

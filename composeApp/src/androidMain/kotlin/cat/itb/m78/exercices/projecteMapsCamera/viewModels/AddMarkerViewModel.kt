@@ -8,8 +8,16 @@ import androidx.lifecycle.ViewModel
 import cat.itb.m78.exercices.projecteMapsCamera.DTOs.InsertMarker
 import cat.itb.m78.exercices.projecteMapsCamera.PHOTO_URI_KEY
 import cat.itb.m78.exercices.sqldelight.database
+import com.russhwolf.settings.Settings
 
 class AddMarkerViewModel(private val savedStateHandle: SavedStateHandle) : ViewModel(){
+    //Settings examen
+    private val settings : Settings = Settings()
+
+    fun getLastPhotoUri() : String {
+        return settings.getString(PHOTO_URI_KEY, "null")
+    }
+
     //Database
     private val dbQueries = database.monumentsQueries
 
@@ -23,9 +31,6 @@ class AddMarkerViewModel(private val savedStateHandle: SavedStateHandle) : ViewM
         )
     }
 
-    //Photo URI
-    var showDialog by mutableStateOf(false)
-    var showTitleErrorDialog by mutableStateOf(false)
     val photoUri = savedStateHandle.getStateFlow<String?>(PHOTO_URI_KEY, null)
 
     //State between screens

@@ -12,6 +12,7 @@ import com.russhwolf.settings.Settings
 import com.russhwolf.settings.set
 
 private const val COUNT_VIEW_KEY = "count"
+
 class CountViewViewModel : ViewModel(){
     val settings: Settings = Settings()
     val countViews = settings.getInt(COUNT_VIEW_KEY, 0)

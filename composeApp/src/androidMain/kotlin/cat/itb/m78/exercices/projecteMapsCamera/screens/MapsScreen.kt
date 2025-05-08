@@ -1,5 +1,6 @@
 package cat.itb.m78.exercices.projecteMapsCamera.screens
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -54,12 +55,13 @@ fun MapsScreen(navigateToAddMarkerScreen: (Double, Double) -> Unit, drawerState:
     MapsScreenArguments(navigateToAddMarkerScreen, drawerState, scope, viewModel.monumentsList.value)
 }
 
+@SuppressLint("UnrememberedMutableState")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MapsScreenArguments(navigateToAddMarkerScreen: (Double, Double) -> Unit,
     drawerState: DrawerState, scope: CoroutineScope, monumentList: List<Monuments>){
 
-    val itbLocation = LatLng(41.4533, 2.18625)
+    val itbLocation = LatLng(41.453269958496094, 2.1865615844726562)
     val cameraPositionState = rememberCameraPositionState {
         position = CameraPosition.fromLatLngZoom(itbLocation, 15f)
     }
@@ -108,6 +110,14 @@ fun MapsScreenArguments(navigateToAddMarkerScreen: (Double, Double) -> Unit,
                     showDialog = true
                 }
             ) {
+                //Marcador examen
+                Marker(
+                    state = MarkerState(position = itbLocation),
+                    title = "Institut Tecnològic de Barcelona",
+                    snippet = "ITB",
+                    icon = BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE)
+                )
+
                 //Marcadors guardats a la BBDD
                 monumentList.forEach { monument ->
                     AdvancedMarker(
