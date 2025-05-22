@@ -1,29 +1,18 @@
-# Template for Compose Multiplatform DAM78 exercices
+# Multiplatform Apps with Kotlin & Jetpack Compose
 
-Project to be used as a template for DAM78 exercices
+This repository contains a collection of applications for both **desktop** and **Android**, built with Kotlin and Jetpack Compose. All projects follow the **MVC** architectural pattern and showcase:
 
-## Running
+- **User Interfaces:**  
+  - Desktop UI using Compose for Desktop  
+  - Mobile UI using Jetpack Compose for Android  
 
-### Android
-To run the application on android device/emulator:  
- - open project in Android Studio and run imported android run configuration
+- **Architecture:**  
+  - Model–View–Controller (MVC) separation  
+  - Clear service/repository layers for data access  
 
-To build the application bundle:
- - run `./gradlew :composeApp:assembleDebug`
- - find `.apk` file in `composeApp/build/outputs/apk/debug/composeApp-debug.apk`
-Run android UI tests on the connected device: `./gradlew :composeApp:connectedDebugAndroidTest`
+- **Data Persistence:**  
+  - Local databases (SQLite/SQLDelight plugin)
+  - Migration scripts and schema definitions  
 
-### Desktop
-Run the desktop application: `./gradlew :composeApp:run`
-Run desktop UI tests: `./gradlew :composeApp:jvmTest`
-
-You can also configure a gradle run task in Intellij
-
-### iOS
-To run the application on iPhone device/simulator:
- - Open `iosApp/iosApp.xcproject` in Xcode and run standard configuration
- - Or use [Kotlin Multiplatform Mobile plugin](https://plugins.jetbrains.com/plugin/14936-kotlin-multiplatform-mobile) for Android Studio
-Run iOS simulator UI tests: `./gradlew :composeApp:iosSimulatorArm64Test`
-
-## Notes
-This project has been created with https://terrakok.github.io/Compose-Multiplatform-Wizard/
+- **API Integration:**  
+  - RESTful API clients with JSON serialization 
